@@ -1,0 +1,211 @@
+homeassistant:
+  customize:
+    package.node_anchors:
+        Entità clima:                               &climate        climate.condizionatore_salone
+        Presenza in casa:                           &family         group.famiglia
+        # cambiare sensore temperatura esterna: temp_ext nei template states('sensor.weather_temperature')
+# sistemare indice di thom esterno  
+
+input_number:
+  offset_temp_ext_estate_salone:
+    name: Offset Temperatura Esterna estate Celsius
+    min: 0
+    max: 10
+    step: 1
+    unit_of_measurement: "°C"
+    mode: box
+  offset_thom_ext_salone:    
+    name: Offset Temperatura Esterna estate Thom
+    min: 0
+    max: 10
+    step: 1
+    unit_of_measurement: "DI"
+    mode: box
+  offset_temperatura_ext_inverno_salone:
+    name: Offset Temperatura Esterna Inverno
+    min: 0
+    max: 10
+    step: 1
+    unit_of_measurement: "°C"
+    mode: box
+
+  offset_humidity_ext_salone:
+    name: Offset Umidità Esterna 
+    min: 10
+    max: 100
+    step: 10
+    unit_of_measurement: "%"
+    mode: box
+
+input_datetime:
+  temp_ext_on_salone:                                    
+    has_date: false
+    has_time: true
+    name: Auto on temperatura esterna
+  temp_ext_off_salone:
+    has_date: false
+    has_time: true
+    name: Auto off temperatura esterna
+
+script:
+  check_ext_temp_climate_on_ac_salone:
+    alias: Controllo temperatura esterna per accensione clima
+    variables:
+      climate: *climate
+    sequence:
+      - if:
+          - condition: template
+            value_template: >
+              {%set hum_ext = states('sensor.weather_humidity')|int(0) %}
+              {%set temp_ext = states('sensor.weather_temperature')|float(0)%}
+              {%set thom_ext = states('sensor.thom_esterno')|float(0)%}
+              {%set thom_int = states('sensor.thom_ac_salone')|float(0)%}
+              {% set mode = states('input_select.season_of_use_ac_salone') %} 
+               {{
+                ('Estate Gradi Celsius' == mode and state_attr(climate,'current_temperature')|float(0) > (temp_ext + states('input_number.offset_temp_ext_estate_salone')|float(0)) and state_attr(climate,'current_humidity')|int(0) < ( hum_ext +  states('input_number.offset_humidity_ext_salone')|int(0))) or 
+                ('Inverno' == mode and temp_ext > (state_attr(climate,'current_temperature')|float(0) + states('input_number.offset_temperatura_ext_inverno_salone')|float(0))) or 
+                ('Estate Indice di thom' == mode and thom_int > (thom_ext + states('input_number.offset_thom_ext_salone')|float(0))) or
+                ('Umidità' == mode and state_attr(climate,'current_humidity')|int(0) > (hum_ext + states('input_number.offset_humidity_ext_salone')|int(0)))
+              }}
+        then:
+          - service: script.clima_on_ext_salone
+            data: {}
+        else: 
+          - service: script.climate_turn_on_ac_salone
+            data: {}
+
+  # NOTIFICA DI SPEGNERE IL CLIMA ED APRIRE LE FINESTRE
+  clima_ext_temp_salone:
+    alias: Controllo temperatura esterna con clima acceso
+    variables:
+      climate: *climate
+    sequence:
+      - condition: time
+        after: "input_datetime.auto_on_ac_salone"
+        before: "input_datetime.auto_off_ac_salone"
+      - condition: state
+        entity_id: input_boolean.notify_ac_salone
+        state: 'on'
+      - service: script.notify_family
+        data: 
+          notification_icon: 'mdi:air-conditioner'
+          tag: 'ac_sala'
+          title: --CLIMA CASA--
+          message: >
+            Temperatura esterna {{'maggiore' if is_state("input_select.season_of_use_ac_salone", "Inverno")else 'minore' }} di quella target accensione. Spegnere il {{state_attr(climate,'friendly_name')}} ed aprire le finestre.
+
+  # MANCATA ACCENSIONE PER TEMPERATURA ESTERNA
+  clima_on_ext_salone:
+    alias: Mancata accensione clima in base alla temperatura esterna. consiglia di aprire finestre.
+    variables:
+      climate: *climate
+    sequence:
+      - condition: state
+        entity_id: input_boolean.notify_ac_salone
+        state: 'on'
+      - service: script.notify_family
+        data: 
+          notification_icon: 'mdi:air-conditioner'
+          tag: 'ac_sala'
+          title: --{{state_attr(climate,'friendly_name')}}--
+          message: >
+            Accensione automatica {{state_attr(climate,'friendly_name')}} non eseguita anche se raggiunta temperatura di target. E' consigliato aprire le finestre.
+
+automation:
+  - alias: Avviso di spegnere clima per temperatura esterna salone
+    id: spegni_clima_temp_ext_salone
+    trigger:
+    - platform: template
+      value_template: >
+              {%set climate = 'climate.condizionatore_salone' %}
+              {%set hum_ext = states('sensor.weather_humidity')|int(0) %}
+              {%set temp_ext = states('sensor.weather_temperature')|float(0)%}
+              {%set thom_ext = states('sensor.thom_esterno')|float(0)%}
+              {%set thom_int = states('sensor.thom_ac_salone')|float(0)%}
+              {% set mode = states('input_select.season_of_use_ac_salone') %} 
+               {{
+                ('Estate Gradi Celsius' == mode and state_attr(climate,'current_temperature')|float(0) > (temp_ext + states('input_number.offset_temp_ext_estate_salone')|float(0)) and state_attr(climate,'current_humidity')|int(0) < ( hum_ext +  states('input_number.offset_humidity_ext_salone')|int(0))) or 
+                ('Inverno' == mode and temp_ext > (state_attr(climate,'current_temperature')|float(0) + states('input_number.offset_temperatura_ext_inverno_salone')|float(0))) or 
+                ('Estate Indice di thom' == mode and thom_int > (thom_ext + states('input_number.offset_thom_ext_salone')|float(0))) or
+                ('Umidità' == mode and state_attr(climate,'current_humidity')|int(0) > (hum_ext + states('input_number.offset_humidity_ext_salone')|int(0)))
+              }}
+    condition:
+    - not:
+      - condition: state
+        entity_id: *climate
+        state: "off"
+    action:
+        - alias: Controllo temperatura esterna con clima acceso
+          service: script.clima_ext_temp_salone
+          data: {}
+
+  - alias: Avviso temperatura esterna salone
+    #description: AVVISO TEMPERATURA ESTERNA "ELEVATA  CHIUDERE FINESTRE        
+    id: avviso_tem_ext_salone
+    variables:
+      climate: *climate
+    trigger:    
+
+    - platform: template
+      value_template: >
+              {%set climate = 'climate.condizionatore_salone' %}
+              {%set hum_ext = states('sensor.weather_humidity')|int(0) %}
+              {%set temp_ext = states('sensor.weather_temperature')|float(0)%}
+              {%set thom_ext = states('sensor.thom_esterno')|float(0)%}
+              {%set thom_int = states('sensor.thom_ac_salone')|float(0)%}
+              {% set mode = states('input_select.season_of_use_ac_salone') %} 
+               {{
+                ('Estate Gradi Celsius' == mode and state_attr(climate,'current_temperature')|float(0) > (temp_ext + states('input_number.offset_temp_ext_estate_salone')|float(0)) and state_attr(climate,'current_humidity')|int(0) < ( hum_ext +  states('input_number.offset_humidity_ext_salone')|int(0))) or 
+                ('Inverno' == mode and temp_ext > (state_attr(climate,'current_temperature')|float(0) + states('input_number.offset_temperatura_ext_inverno_salone')|float(0))) or 
+                ('Estate Indice di thom' == mode and thom_int > (thom_ext + states('input_number.offset_thom_ext_salone')|float(0))) or
+                ('Umidità' == mode and state_attr(climate,'current_humidity')|int(0) > (hum_ext + states('input_number.offset_humidity_ext_salone')|int(0)))
+              }}
+
+    condition:
+    - condition: state
+      entity_id: input_boolean.notify_ac_salone
+      state: 'on'
+    - condition: time
+      after: "input_datetime.temp_ext_on_salone"
+      before: "input_datetime.temp_ext_off_salone"
+    action:
+      - alias: Controllo abilitazione presenza
+        if: 
+          - condition: state
+            entity_id: input_boolean.presence_ac_salone
+            state: "on"
+          - condition: state
+            entity_id: *family
+            state: "home"
+        then:
+          - alias: Controllo finestra on
+            if:
+            - condition: state
+              entity_id: input_boolean.check_window_ac_salone
+              state: "on"
+            then:
+            - alias: CONSIGLIO DI CHIUDERE LA FINESTRA IN BASE ALLA TEMPERATURA ESTERNA
+              service: script.check_windows_temp_ext_ac_salone
+              data: {}
+            else:
+            - alias: Invia notifica
+              service: script.notify_family
+              data: 
+                notification_icon: 'mdi:air-conditioner'
+                tag: 'ac_sala'
+                title: --CLIMA CASA--
+                message: >
+                  Temperatura esterna maggiore di quella interna. {{'Aprire' if is_state("input_select.season_of_use_ac_salone", "Inverno")else 'Chiudere' }} le finestre {{state_attr(climate,'friendly_name')}}.
+
+        else:
+            - condition: state
+              entity_id: input_boolean.presence_ac_salone
+              state: "off"
+            - alias: Invia notifica
+              service: script.notify_family
+              data: 
+                notification_icon: 'mdi:air-conditioner'
+                tag: 'ac_sala'
+                title: --CLIMA CASA--
+                message: >
+                  Temperatura esterna maggiore di quella interna. {{'Aprire' if is_state("input_select.season_of_use_ac_salone", "Inverno")else 'Chiudere' }} le finestre {{state_attr(climate,'friendly_name')}}.
