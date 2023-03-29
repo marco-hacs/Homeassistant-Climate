@@ -286,21 +286,25 @@ cards:
           browser_mod:
             service: browser_mod.popup
             data:
-              title: Statistiche
               right_button: Chiudi
               content:
                 type: entities
                 show_header_toggle: false
                 entities:
-                  - style:
-                      background: '#62717b'
-                      height: 1px
-                      margin-left: auto
-                      margin-right: auto
-                    type: divider
                   - type: custom:multiple-entity-row
-                    entity: sensor.condizionatore_salone
-                    attribute: costo_consumo_giornaliero_condizionatore_sala
+                    entity: sensor.consumi_ac_salone
+                    attribute: costo_ultimo_ac_salone
+                    name: Ultima
+                    state_header: EURO
+                    state_color: true
+                    entities:
+                      - entity: sensor.condizionatore_salone
+                        name: TEMPO
+                      - entity: sensor.consumi_ac_salone
+                        name: CONSUMO
+                  - type: custom:multiple-entity-row
+                    entity: sensor.consumi_ac_salone
+                    attribute: costo_giornaliero_ac_salone
                     name: OGGI
                     state_header: EURO
                     state_color: true
@@ -309,14 +313,9 @@ cards:
                         attribute: Oggi
                         entity: sensor.condizionatore_salone
                         name: TEMPO
-                      - entity: sensor.condizionatore_salone_consumo_giornaliero
+                      - entity: sensor.consumo_oggi_ac_salone
                         name: CONSUMO
-                  - style:
-                      background: '#62717b'
-                      height: 1px
-                      margin-left: auto
-                      margin-right: auto
-                    type: divider
+                  - type: divider
                   - type: custom:multiple-entity-row
                     entity: sensor.condizionatore_salone
                     attribute: costo_consumo_ieri_condizionatore_sala
