@@ -1,0 +1,41 @@
+homeassistant:
+  customize:
+    package.node_anchors:
+        kwh totali:                                 &kwh            sensor.condizionatore_sala_energy
+        climate:                                    &climate        climate.condizionatore_salone
+
+template:
+  - sensor:
+      - name: Consumi AC Salone
+        icon: mdi:history
+        state:  "{{(states('sensor.condizionatore_sala_energy')|float(0)-states('sensor.consumo_iniziale_ac_salone')|float(0))|round(2)}} kWh"
+        attributes:
+          consumo_ieri: "{{state_attr('sensor.consumo_oggi_ac_salone','last_period')|round(2)}} kWh"
+          costo_ultimo_ac_salone: "{{((this.state |float(0)) * (states('input_number.costo_energia_casa')|float(0))) |round(2, default=0) }} €"
+          costo_ieri_ac_salone: "{{((state_attr('sensor.consumo_oggi_ac_salone', 'last_period') |float(0)) * (states('input_number.costo_energia_casa')|float(0))) |round(2, default=0) }} €"
+          costo_giornaliero_ac_salone: "{{((states('sensor.consumo_oggi_ac_salone') |float(0)) * (states('input_number.costo_energia_casa')|float(0))) |round(2, default=0) }} €"
+          costo_mensile_ac_salone: "{{((states('sensor.consumo_mese_ac_salone') |float(0)) * (states('input_number.costo_energia_casa')|float(0))) |round(2, default=0) }} €"
+          costo_annuale_ac_salone: "{{((states('sensor.consumo_anno_ac_salone') |float(0)) * (states('input_number.costo_energia_casa')|float(0))) |round(2, default=0) }} €"
+          
+  - trigger:
+      - platform: state
+        entity_id: *climate
+        from: 'off'
+    sensor:
+      - name: Consumo iniziale ac_salone
+        state: "{{states('sensor.condizionatore_sala_energy')}}"
+
+
+utility_meter:
+
+  consumo_oggi_ac_salone:
+    source: *kwh
+    cycle: daily
+  
+  consumo_mese_ac_salone: 
+    source: *kwh
+    cycle: monthly
+  
+  consumo_anno_ac_salone: 
+    source: *kwh
+    cycle: monthly
