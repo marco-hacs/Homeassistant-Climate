@@ -45,19 +45,76 @@ styles:
       - top: 230px
     display:
       - position: absolute
-      - left: 155px
-      - top: 60px
+      - left: 111px
+      - top: 38px
 custom_fields:
   display:
     card:
       type: custom:button-card
-      name: '[[[ return states[variables.climate].attributes.temperature ]]]'
       tap_action:
         action: none
       styles:
+        card:
+          - background-color: red
+          - border-width: 0px
+          - height: 163px
+          - width: 138px
+          - padding: 0px
+          - border-radius: 0px
         name:
           - color: rgba(49, 46, 42, 1)
           - font-size: 320%
+        custom_fields:
+          set_temp:
+            - position: absolute
+            - left: 35px
+            - top: 20px
+          cur_temp:
+            - position: absolute
+            - left: 11px
+            - top: 115px
+      custom_fields:
+        cur_temp:
+          card:
+            type: custom:button-card
+            name: >-
+              [[[ return
+              states[variables.climate].attributes.current_temperature  ]]]
+            label: >-
+              [[[ return states[variables.climate].attributes.current_humidity 
+              ]]]
+            icon: mdi:thermometer-chevron-up
+            show_icon: true
+            show_label: true
+            tap_action:
+              action: none
+            styles:
+              grid:
+                - grid-template-areas: '"i n " "i l"'
+                - grid-template-columns: 1fr 2fr
+              card:
+                - background-color: blue
+                - height: 35px
+                - width: 68px
+              name:
+                - color: rgba(49, 46, 42, 1)
+                - font-size: 70%
+              icon:
+                - width: 100%
+                - color: rgba(49, 46, 42, 1)
+              label:
+                - color: rgba(49, 46, 42, 1)
+                - font-size: 70%
+        set_temp:
+          card:
+            type: custom:button-card
+            name: '[[[ return states[variables.climate].attributes.temperature  ]]]'
+            tap_action:
+              action: none
+            styles:
+              name:
+                - color: rgba(49, 46, 42, 1)
+                - font-size: 320%
   mode:
     card:
       type: custom:button-card
