@@ -1,0 +1,11 @@
+button_card_templates:
+  button_climate:
+    styles:
+      card:
+        - height: 50px
+        - width: 80px
+        - background-color: rgba(0,0,0,0.0
+        - border-width: 0px
+      icon:
+        - width: 40%
+        - color: rgba(120, 120, 120, 1)
