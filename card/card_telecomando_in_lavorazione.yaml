@@ -85,7 +85,25 @@ custom_fields:
             - position: absolute
             - top: 53px
             - left: 101px
+          time:
+            - position: absolute
+            - top: 0px
+            - left: 4px
       custom_fields:
+        time:
+          card:
+            type: custom:button-card
+            template: info_display
+            styles:
+              card:
+                - width: 138px
+              name:
+                - justify-self: center
+            name: |
+              [[[
+                if (states[variables.climate].state == 'off') return 'Spento ';
+                else return 'Acceso: ' + states["sensor."+variables.name].state;
+              ]]]
         fan:
           card:
             type: custom:button-card
@@ -237,6 +255,13 @@ custom_fields:
       type: custom:button-card
       icon: mdi:power
       template: button_climate
+      styles:
+        icon:
+          - color: |
+              [[[
+                if (states[variables.climate].state == 'off') return 'rgba(120, 120, 120, 1)';
+                else return 'rgba(107, 179, 214, 1)';
+              ]]]
       tap_action:
         action: call-service
         service: |
