@@ -1,10 +1,12 @@
 homeassistant:
   customize:
     package.node_anchors:
-        Entità clima:                               &climate        climate.condizionatore_salone
+        kwh totali:                                 &kwh            sensor.condizionatore_sala_energy
+        climate:                                    &climate        climate.condizionatore_salone
         # modificare entità set climate nei template
 
 template:
+  # TEMPO
   - sensor:
       - name: time_on_ac_salone
         state:  >-
@@ -15,24 +17,8 @@ template:
             0
           {% endif %}
 
-  - trigger:
-      - platform: state
-        entity_id: *climate
-        not_to: 'off'
-    sensor:
-      - name: inizio_ac_salone
-        state: "{{as_timestamp(now())}}"
-
-  - trigger:
-      - platform: state
-        entity_id: *climate
-        to: 'off'
-    sensor:
-      - name: fine_ac_salone
-        state: "{{as_timestamp(now())}}"
-
   - sensor:
-      - name: condizionatore_salone
+      - name: ac_salone
         icon: mdi:history
         state: >
           {%set climate = 'climate.condizionatore_salone' %}
@@ -102,13 +88,90 @@ template:
                   {{minutes}}min
                 {% endif %}
 
+  - trigger:
+      - platform: state
+        entity_id: *climate
+        not_to: 'off'
+    sensor:
+      - name: inizio_ac_salone
+        state: "{{as_timestamp(now())}}"
+
+  - trigger:
+      - platform: state
+        entity_id: *climate
+        to: 'off'
+    sensor:
+      - name: fine_ac_salone
+        state: "{{as_timestamp(now())}}"
+        
+  # CONSUMI
+      - name: Consumo iniziale ac_salone
+        state: "{{states('sensor.condizionatore_sala_energy')}}"
+
+  - sensor:
+      - name: Consumi AC Salone
+        icon: mdi:history
+        state:  "{{(states('sensor.condizionatore_sala_energy')|float(0)-states('sensor.consumo_iniziale_ac_salone')|float(0))|round(2)}}"
+        unit_of_measurement: 'kWh'
+        attributes:
+          consumo_ieri: "{{state_attr('sensor.consumo_oggi_ac_salone','last_period')|round(2)}} kWh"
+          consumo_oggi: "{{states('sensor.consumo_oggi_ac_salone')|round(2)}} kWh"
+          consumo_mese: "{{states('sensor.consumo_mese_ac_salone')|round(2)}} kWh"
+          consumo_anno: "{{states('sensor.consumo_anno_ac_salone')|round(2)}} kWh"
+          costo_ultimo_ac_salone: "{{((this.state |float(0)) * (states('input_number.costo_energia_casa')|float(0))) |round(2, default=0) }} €"
+          costo_ieri_ac_salone: "{{((state_attr('sensor.consumo_oggi_ac_salone', 'last_period') |float(0)) * (states('input_number.costo_energia_casa')|float(0))) |round(2, default=0) }} €"
+          costo_giornaliero_ac_salone: "{{((states('sensor.consumo_oggi_ac_salone') |float(0)) * (states('input_number.costo_energia_casa')|float(0))) |round(2, default=0) }} €"
+          costo_mensile_ac_salone: "{{((states('sensor.consumo_mese_ac_salone') |float(0)) * (states('input_number.costo_energia_casa')|float(0))) |round(2, default=0) }} €"
+          costo_annuale_ac_salone: "{{((states('sensor.consumo_anno_ac_salone') |float(0)) * (states('input_number.costo_energia_casa')|float(0))) |round(2, default=0) }} €"
+
 utility_meter:
+  # TEMPO
   tempo_oggi_ac_salone:
     source: sensor.time_on_ac_salone
     cycle: daily
-  tempo_anno_ac_salone:
-    source: sensor.time_on_ac_salone
-    cycle: yearly
   tempo_mese_ac_salone:
     source: sensor.time_on_ac_salone
     cycle: monthly
+  tempo_anno_ac_salone:
+    source: sensor.time_on_ac_salone
+    cycle: yearly
+
+  # CONSUMI
+  consumo_oggi_ac_salone:
+    source: *kwh
+    cycle: daily
+  
+  consumo_mese_ac_salone: 
+    source: *kwh
+    cycle: monthly
+  
+  consumo_anno_ac_salone: 
+    source: *kwh
+    cycle: monthly
+
+# RESET CONTATORI TEMPO E CONSUMI
+input_text:
+  data_reset_ac_salone:
+
+script:
+  reset_statistic_ac_salone:
+    sequence:
+      - alias: imposta data ultimo reset
+        service: input_text.set_value
+        data:
+          value: >-
+            {{now().strftime('%d/%m/%Y %H:%M')}}
+        target:
+          entity_id: input_text.data_reset_ac_salone
+      - alias: resetta i contantori statistiche
+        service: utility_meter.calibrate
+        data:
+          value: "0"
+        target: 
+          entity_id:
+            - sensor.tempo_oggi_ac_salone
+            - sensor.tempo_mese_ac_salone
+            - sensor.tempo_anno_ac_salone
+            - sensor.consumo_oggi_ac_salone
+            - sensor.consumo_mese_ac_salone
+            - sensor.consumo_anno_ac_salone
