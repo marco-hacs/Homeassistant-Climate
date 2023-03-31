@@ -3,8 +3,9 @@ button_card_templates:
     styles:
       card:
         - background-color: rgba(0,0,0,0.0)
-        - width: 34px
+        - border-width: 0px
         - border-radius: 0px
+        - width: 34px
       icon:
         - width: 80%
         - color: rgba(49, 46, 42, 1)
@@ -16,6 +17,7 @@ button_card_templates:
         - background-color: rgba(0,0,0,0.0)
         - height: 35px
         - width: 68px
+        - border-width: 0px
         - border-radius: 0px
       name:
         - color: rgba(49, 46, 42, 1)
@@ -35,6 +37,7 @@ button_card_templates:
         - width: 80px
         - background-color: rgba(0,0,0,0.0
         - border-width: 0px
+        - border-radius: 0px
       icon:
         - width: 40%
         - color: rgba(120, 120, 120, 1)
