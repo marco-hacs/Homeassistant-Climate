@@ -1,4 +1,33 @@
 button_card_templates:
+  mode_display:
+    styles:
+      card:
+        - background-color: rgba(0,0,0,0.0)
+        - width: 34px
+        - border-radius: 0px
+      icon:
+        - width: 80%
+        - color: rgba(49, 46, 42, 1)
+  info_display:
+    show_icon: true
+    show_label: true
+    styles:
+      card:
+        - background-color: rgba(0,0,0,0.0)
+        - height: 35px
+        - width: 68px
+        - border-radius: 0px
+      name:
+        - color: rgba(49, 46, 42, 1)
+        - font-size: 70%
+        - justify-self: left
+      label:
+        - color: rgba(49, 46, 42, 1)
+        - justify-self: left
+        - font-size: 70%
+      icon:
+        - width: 100%
+        - color: rgba(49, 46, 42, 1)
   button_climate:
     styles:
       card:
