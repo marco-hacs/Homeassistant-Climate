@@ -1,6 +1,7 @@
 type: custom:button-card
 variables:
   climate: climate.condizionatore_salone
+  name: ac_salone
 triggers_update: all
 styles:
   card:
@@ -55,7 +56,7 @@ custom_fields:
         action: none
       styles:
         card:
-          - background-color: red
+          - background-color: rgba(0,0,0,0.0)
           - border-width: 0px
           - height: 163px
           - width: 138px
@@ -71,46 +72,103 @@ custom_fields:
             - top: 20px
           cur_temp:
             - position: absolute
-            - left: 11px
+            - left: 1px
             - top: 115px
+          auto:
+            - position: absolute
+            - left: 73px
+            - top: 115px
+          mode:
+            - position: absolute
+            - top: 80px
       custom_fields:
+        mode:
+          card:
+            type: custom:button-card
+            styles:
+              card:
+                - height: 35px
+                - width: 137px
+              custom_fields:
+                heat:
+                  - position: absolute
+                cool:
+                  - position: absolute
+                  - left: 34px
+                dry:
+                  - position: absolute
+                  - left: 68px
+                fan_only:
+                  - position: absolute
+                  - left: 102px
+            custom_fields:
+              fan_only:
+                card:
+                  type: custom:button-card
+                  template: mode_display
+                  icon: |
+                    [[[
+                      if (states[variables.climate].attributes.last_on_operation == 'fan_only')
+                        return "mdi:fan";
+                    ]]]
+              dry:
+                card:
+                  type: custom:button-card
+                  template: mode_display
+                  icon: |
+                    [[[
+                      if (states[variables.climate].attributes.last_on_operation == 'dry')
+                        return "mdi:water-percent";
+                    ]]]
+              cool:
+                card:
+                  type: custom:button-card
+                  template: mode_display
+                  icon: |
+                    [[[
+                      if (states[variables.climate].attributes.last_on_operation == 'cool')
+                        return "mdi:snowflake";
+                    ]]]
+              heat:
+                card:
+                  type: custom:button-card
+                  template: mode_display
+                  icon: |
+                    [[[
+                      if (states[variables.climate].attributes.last_on_operation == 'heat')
+                        return "mdi:fire";
+                    ]]]
+        auto:
+          card:
+            type: custom:button-card
+            name: >-
+              [[[ return "AutoOn:
+              "+states['automation.accensione_automatica_'+variables.name].state]]]
+            label: >-
+              [[[ return "AutoOff:
+              "+states['automation.spegnimento_automatico_'+variables.name].state]]]
+            template: info_display
         cur_temp:
           card:
             type: custom:button-card
             name: >-
               [[[ return
-              states[variables.climate].attributes.current_temperature  ]]]
+              states[variables.climate].attributes.current_temperature + "°" ]]]
             label: >-
-              [[[ return states[variables.climate].attributes.current_humidity 
-              ]]]
-            icon: mdi:thermometer-chevron-up
-            show_icon: true
-            show_label: true
-            tap_action:
-              action: none
+              [[[ return states[variables.climate].attributes.current_humidity +
+              "%" ]]]
+            icon: mdi:home-export-outline
+            template: info_display
             styles:
               grid:
                 - grid-template-areas: '"i n " "i l"'
                 - grid-template-columns: 1fr 2fr
-              card:
-                - background-color: blue
-                - height: 35px
-                - width: 68px
-              name:
-                - color: rgba(49, 46, 42, 1)
-                - font-size: 70%
-              icon:
-                - width: 100%
-                - color: rgba(49, 46, 42, 1)
-              label:
-                - color: rgba(49, 46, 42, 1)
-                - font-size: 70%
         set_temp:
           card:
             type: custom:button-card
-            name: '[[[ return states[variables.climate].attributes.temperature  ]]]'
-            tap_action:
-              action: none
+            name: >-
+              [[[ return states[variables.climate].attributes.temperature + "°"
+              ]]]
             styles:
               name:
                 - color: rgba(49, 46, 42, 1)
@@ -198,17 +256,16 @@ custom_fields:
           temperature: |
             [[[ return states[variables.climate].attributes.temperature - 1; ]]]
   background: >
-    <svg width="500" height="500" viewBox="0 0 500 500" fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    xmlns:xlink="http://www.w3.org/1999/xlink"> <rect width="500" height="500"
-    fill="url(#pattern0)"/> <path d="M180 58H320V221H180V58Z" fill="#CCE4E6"/>
-    <ellipse cx="216.5" cy="277" rx="15.5" ry="13" fill="#3A3A3A"/> <ellipse
-    cx="289.5" cy="279" rx="17.5" ry="13" fill="#3A3A3A"/> <circle cx="318.5"
-    cy="336.5" r="17.5" fill="#3A3A3A"/> <ellipse cx="216.5" cy="398.5"
-    rx="15.5" ry="17.5" fill="#3A3A3A"/> <ellipse cx="289.5" cy="395" rx="17.5"
-    ry="21" fill="#3A3A3A"/> <ellipse cx="181.5" cy="336.5" rx="16.5" ry="17.5"
-    fill="#3A3A3A"/> <ellipse cx="248" cy="335.5" rx="24" ry="27.5"
-    fill="#3A3A3A"/> <defs> <pattern id="pattern0"
+    <svg width="500" height="500" viewBox="0 0 500 500" fill="none"> <rect
+    width="500" height="500"fill="url(#pattern0)"/>  <path d="M180
+    58H320V221H180V58Z" fill="#CCE4E6"/> <circle cx="250.5" cy="334.5" r="39"
+    stroke="#E3EDEF" stroke-width="9"/> <ellipse cx="216.5" cy="277" rx="15.5"
+    ry="13" fill="#3A3A3A"/> <ellipse cx="289.5" cy="279" rx="17.5" ry="13"
+    fill="#3A3A3A"/> <circle cx="318.5" cy="336.5" r="17.5" fill="#3A3A3A"/>
+    <ellipse cx="216.5" cy="398.5" rx="15.5" ry="17.5" fill="#3A3A3A"/> <ellipse
+    cx="289.5" cy="395" rx="17.5" ry="21" fill="#3A3A3A"/> <ellipse cx="181.5"
+    cy="336.5" rx="16.5" ry="17.5" fill="#3A3A3A"/> <ellipse cx="248" cy="335.5"
+    rx="24" ry="27.5" fill="#3A3A3A"/> <defs> <pattern id="pattern0"
     patternContentUnits="objectBoundingBox" width="1" height="1"> <use
     xlink:href="#image0_1_6" transform="scale(0.002)"/> </pattern> <image
     id="image0_1_6" width="500" height="500"
