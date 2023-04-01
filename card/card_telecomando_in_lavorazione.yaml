@@ -48,23 +48,150 @@ styles:
       - position: absolute
       - left: 111px
       - top: 38px
+      - display: |
+          [[[
+            if (states['input_boolean.statistic_'+variables.name].state == 'off')
+              return "block";
+            return "none";
+          ]]]
+    display_statistic:
+      - position: absolute
+      - left: 111px
+      - top: 38px
+      - display: |
+          [[[
+            if (states['input_boolean.statistic_'+variables.name].state == 'on')
+              return "block";
+            return "none";
+          ]]]
 custom_fields:
+  statistic:
+    card:
+      type: custom:button-card
+      icon: mdi:chart-bell-curve
+      template: button_climate
+      tap_action:
+        action: call-service
+        service: input_boolean.toggle
+        service_data:
+          entity_id: '[[[ return "input_boolean.statistic_"+variables.name ]]]'
+      styles:
+        icon:
+          - color: |
+              [[[
+                if (states["input_boolean.statistic_"+variables.name].state == 'off') return 'rgba(120, 120, 120, 1)';
+                else return 'rgba(107, 179, 214, 1)';
+              ]]]
+  display_statistic:
+    card:
+      type: custom:button-card
+      template: background_display
+      styles:
+        custom_fields:
+          now:
+            - position: absolute
+            - left: 3px
+            - top: 0px
+          oggi:
+            - position: absolute
+            - left: 3px
+            - top: 33px
+          ieri:
+            - position: absolute
+            - left: 3px
+            - top: 66px
+          mese:
+            - position: absolute
+            - left: 3px
+            - top: 99px
+          anno:
+            - position: absolute
+            - left: 3px
+            - top: 132px
+      custom_fields:
+        now:
+          card:
+            type: custom:button-card
+            template: statistic_climate
+            name: Ultimo
+            label: >-
+              [[[ return states['sensor.consumi_'+variables.name].state +
+              'kWh']]]
+            custom_fields:
+              name:
+                card:
+                  type: custom:button-card
+                  name: '[[[return states[''sensor.''+variables.name].state ]]]'
+                  label: ' [[[return states[''sensor.consumi_''+variables.name].attributes.costo_ultimo ]]]'
+        oggi:
+          card:
+            type: custom:button-card
+            template: statistic_climate
+            name: Oggi
+            label: >-
+              [[[ return
+              states['sensor.consumi_'+variables.name].attributes.consumo_oggi]]]
+            custom_fields:
+              name:
+                card:
+                  type: custom:button-card
+                  name: >-
+                    [[[return states['sensor.'+variables.name].attributes.Oggi
+                    ]]]
+                  label: ' [[[return states[''sensor.consumi_''+variables.name].attributes.costo_oggi ]]]'
+        ieri:
+          card:
+            type: custom:button-card
+            template: statistic_climate
+            name: Ieri
+            label: >-
+              [[[ return
+              states['sensor.consumi_'+variables.name].attributes.consumo_ieri]]]
+            custom_fields:
+              name:
+                card:
+                  type: custom:button-card
+                  name: >-
+                    [[[return states['sensor.'+variables.name].attributes.Ieri
+                    ]]]
+                  label: ' [[[return states[''sensor.consumi_''+variables.name].attributes.costo_ieri ]]]'
+        mese:
+          card:
+            type: custom:button-card
+            template: statistic_climate
+            name: Mese
+            label: >-
+              [[[ return
+              states['sensor.consumi_'+variables.name].attributes.consumo_mese]]]
+            custom_fields:
+              name:
+                card:
+                  type: custom:button-card
+                  name: >-
+                    [[[return states['sensor.'+variables.name].attributes.Mese
+                    ]]]
+                  label: ' [[[return states[''sensor.consumi_''+variables.name].attributes.costo_mese ]]]'
+        anno:
+          card:
+            type: custom:button-card
+            template: statistic_climate
+            name: Anno
+            label: >-
+              [[[ return
+              states['sensor.consumi_'+variables.name].attributes.consumo_anno]]]
+            custom_fields:
+              name:
+                card:
+                  type: custom:button-card
+                  name: >-
+                    [[[return states['sensor.'+variables.name].attributes.Anno
+                    ]]]
+                  label: ' [[[return states[''sensor.consumi_''+variables.name].attributes.costo_anno ]]]'
   display:
     card:
       type: custom:button-card
-      tap_action:
-        action: none
+      template: background_display
       styles:
-        card:
-          - background-color: rgba(0,0,0,0.0)
-          - border-width: 0px
-          - height: 163px
-          - width: 138px
-          - padding: 0px
-          - border-radius: 0px
-        name:
-          - color: rgba(49, 46, 42, 1)
-          - font-size: 320%
         custom_fields:
           set_temp:
             - position: absolute
@@ -223,11 +350,6 @@ custom_fields:
               if (states[variables.climate].attributes.last_on_operation == 'fan_only') return 'heat';
               else return 'cool';
             ]]]      
-  statistic:
-    card:
-      type: custom:button-card
-      icon: mdi:chart-bell-curve
-      template: button_climate
   fan:
     card:
       type: custom:button-card
@@ -373,7 +495,7 @@ custom_fields:
     110.74 392.805C110.879 393.353 111.044 393.872 111.256 394.286C111.36
     394.489 111.515 394.748 111.747 394.973C111.983 395.204 112.406 395.5 113
     395.5Z" stroke="#1A1A1A" stroke-width="3"/> <circle cx="114.5" cy="316.5"
-    r="39" fill="#3A3A3A" stroke="#E3EDEF" stroke-width="9"/> <path d="M184
+    r="39" fill="#3A3A3A" stroke="#D9D9D9" stroke-width="9"/> <path d="M184
     44.5H89L86 3.49999C133 -5 165.5 8 184 18.5V44.5Z" fill="#5D5D5D"/> <path
     d="M44 20V44.5L60 47V37V11.5C52.5 14.5 49 16.5 44 20Z" fill="#5D5D5D"/>
     <path d="M44 21.5C94 -8 148 -1 186.5 21.5" stroke="#CBB9B8"
