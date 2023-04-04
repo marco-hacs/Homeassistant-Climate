@@ -23,6 +23,22 @@ input_datetime:
     has_time: true
     name: Auto off condizionatore_salone
     
+template:
+  - select:
+      - name: "fan_modes_ac_salone"
+        state: "{{ states('input_text.fan_modes_ac_salone') }}"
+        options: "{{state_attr('climate.condizionatore_salone','fan_modes')}}"
+        select_option:
+        - service: input_text.set_value
+          data:
+            value:  "{{ option }}"
+          target:
+            entity_id: input_text.fan_modes_ac_salone
+
+input_text:
+  fan_modes_ac_salone:
+    name: fan_modes_ac_salone
+
 input_select: 
   hvac_modes_ac_salone:
     name: "Mode condizionatore_salone:"
@@ -31,13 +47,6 @@ input_select:
       - Freddo
       - Caldo
       - Ventilazione
-  fan_modes_ac_salone:
-    name: Tipo Ventilazione
-    options:
-      - auto
-      - high
-      - mid
-      - low
   season_of_use_ac_salone:
     name:  Periodo utlizzo
     options:
@@ -98,7 +107,6 @@ script:
       - condition: state
         entity_id: *climate
         state: "off"
-
     - service: climate.turn_off
       target:
         entity_id: *climate
@@ -134,7 +142,7 @@ script:
     - service: climate.set_fan_mode
       data:
         entity_id: *climate
-        fan_mode: "{{states('input_select.fan_modes_ac_salone')}}"
+        fan_mode: "{{states('select.fan_modes_ac_salone')}}"
     - if:
         - "{{is_state('input_boolean.notify_ac_salone','on')}}"
       then:
