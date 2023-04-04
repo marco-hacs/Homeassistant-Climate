@@ -1,0 +1,147 @@
+homeassistant:
+  customize:
+    package.node_anchors:
+        Entità clima:                               &climate        climate.condizionatore_salone
+
+climate:
+    - platform: smartir
+      name: Condizionatore Salone
+      unique_id: salone_ac
+      device_code: 2020
+      controller_data: remote.broadlink_salone
+      temperature_sensor: sensor.temperature_sala
+      humidity_sensor: sensor.humidity_sala
+      #power_sensor: binary_sensor.condizionatore_salone_power
+
+input_datetime:
+  auto_on_ac_salone:                                    
+    has_date: false
+    has_time: true
+    name: Auto on condizionatore_salone
+  auto_off_ac_salone:
+    has_date: false
+    has_time: true
+    name: Auto off condizionatore_salone
+    
+input_select: 
+  hvac_modes_ac_salone:
+    name: "Mode condizionatore_salone:"
+    options:
+      - Secco
+      - Freddo
+      - Caldo
+      - Ventilazione
+  fan_modes_ac_salone:
+    name: Tipo Ventilazione
+    options:
+      - auto
+      - high
+      - mid
+      - low
+  season_of_use_ac_salone:
+    name:  Periodo utlizzo
+    options:
+      - Estate Indice di thom
+      - Estate Gradi Celsius
+      - Inverno 
+      - Umidità
+
+input_boolean:
+  notify_ac_salone:  
+    name: Notifica 
+  presence_ac_salone:
+    name: Controllo presenza in casa
+
+input_number:
+  delay_auto_on_ac_salone:
+    name: Ritardo in m avvio condizionatore_salone dalla soglia clima prevista
+    min: 1
+    max: 60
+    step: 1
+    unit_of_measurement: "min"
+  delay_auto_off_ac_salone:
+    name: Ritardo in m spegnimento condizionatore_salone dalla soglia clima prevista
+    min: 1
+    max: 60
+    step: 1
+    unit_of_measurement: "min"
+  set_temperature_ac_salone:
+    name: Set Temperatura condizionatore_salone
+    min: 17
+    max: 30
+    step: 1
+    unit_of_measurement: °C
+
+script:
+  # SWING CLIMA SALA 
+  aletta_condizionatore_salone:                                                 # ALETTA CONDIZIONATORE SALA SOLO PER ME
+    alias: Aletta Condizionatore Salone
+    mode: single
+    sequence:
+    - data:
+        command: Swing
+        delay_secs: 0.3
+        device: Condizionatore
+        entity_id: remote.broadlink_salone
+        hold_secs: 2.5
+        num_repeats: 11
+      entity_id: remote.broadlink_salone
+      service: remote.send_command
+
+  # SPEGNIMENTO CLIMA
+  climate_turn_off_ac_salone:
+    alias: Spegnimento condizionatore_salone con notifica
+    variables: 
+      climate: *climate
+    sequence:
+    - not:
+      - condition: state
+        entity_id: *climate
+        state: "off"
+
+    - service: climate.turn_off
+      target:
+        entity_id: *climate
+    - if: 
+        - "{{is_state('input_boolean.notify_ac_salone','on')}}"
+      then:
+        - service: script.notify_family 
+          data: 
+            notification_icon: 'mdi:air-conditioner'
+            tag: 'ac_sala'
+            title: --{{state_attr(climate,'friendly_name')}}--
+            message: >
+              Spegnimento automatico {{state_attr(climate,'friendly_name')}}! Ci sono {{ state_attr(climate,'current_temperature') }} gradi
+
+  # ACCENSIONE CLIMA
+  climate_turn_on_ac_salone:
+    alias: Accensione condizionatore_salone con notifica
+    variables: 
+      climate: *climate
+    sequence:
+    - service: climate.set_temperature
+      data:
+        entity_id: *climate
+        temperature: "{{ states('input_number.set_temperature_ac_salone') |float(0) }}"
+        hvac_mode: >
+              {% set state = states('input_select.hvac_modes_ac_salone') %}
+              {% set my_dict = {
+                'Secco': 'dry',
+                'Freddo': 'cool',
+                'Caldo': 'heat',
+                'Ventilazione': 'fan_only' } %}
+              {{my_dict.get(state,'Sconosciuto')}}
+    - service: climate.set_fan_mode
+      data:
+        entity_id: *climate
+        fan_mode: "{{states('input_select.fan_modes_ac_salone')}}"
+    - if:
+        - "{{is_state('input_boolean.notify_ac_salone','on')}}"
+      then:
+        - service: script.notify_family
+          data: 
+            notification_icon: 'mdi:air-conditioner'
+            tag: 'ac_sala'
+            title: --{{state_attr(climate,'friendly_name')}}--
+            message: >
+              Accensione automatica {{state_attr(climate,'friendly_name')}} eseguita. Ci sono {{state_attr(climate,'current_temperature') }} gradi
