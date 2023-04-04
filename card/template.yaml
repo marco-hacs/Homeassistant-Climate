@@ -60,8 +60,6 @@ display_setting_on_off:
       - justify-self: left
 
 background_display:
-  # tap_action:
-  #   action: none
   styles:
     card:
       - background-color: rgba(0,0,0,0.0)
