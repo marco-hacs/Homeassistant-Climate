@@ -40,7 +40,7 @@
             - position: absolute
             - left: 90px
             - top: 465px
-          mode:
+          hvac:
             - position: absolute
             - left: 175px
             - top: 315px
@@ -119,13 +119,151 @@
                 ]]]
 
       custom_fields:
+        ####################################################################
+        #
+        #       TASTI TELECOMANDO
+        #
+        ####################################################################
+
+        #       TASTO STATISTICHE
+        statistic:
+          card:
+            type: custom:button-card
+            icon: mdi:chart-bell-curve
+            template: button_climate
+            tap_action:
+              action: call-service
+              service: input_boolean.toggle
+              service_data:
+                entity_id: '[[[ return "input_boolean.statistic_"+variables.name ]]]'
+            styles:
+              icon:
+                - color: |
+                    [[[
+                      if (states["input_boolean.statistic_"+variables.name].state == 'off') return 'rgba(120, 120, 120, 1)';
+                      else return 'rgba(204, 228, 230, 1)';
+                    ]]]
+
+        #       TASTO MODE 
+        hvac:
+          card:
+            type: custom:button-card
+            icon: mdi:air-filter
+            template: button_climate
+            tap_action:
+              action: call-service
+              service: climate.set_hvac_mode
+              service_data:
+                entity_id: '[[[ return variables.climate ]]]'
+                hvac_mode: |
+                  [[[
+                    if (states[variables.climate].attributes.last_on_operation == 'cool') return 'dry';
+                    if (states[variables.climate].attributes.last_on_operation == 'dry') return 'fan_only';
+                    if (states[variables.climate].attributes.last_on_operation == 'fan_only') return 'heat';
+                    else return 'cool';
+                  ]]]      
+
+        #       TASTO FAN
+        fan:
+          card:
+            type: custom:button-card
+            icon: mdi:fan
+            template: button_climate
+            tap_action:
+              action: call-service
+              service: climate.set_fan_mode
+              service_data:
+                entity_id: '[[[ return variables.climate ]]]'
+                fan_mode: |
+                  [[[
+                    if (states[variables.climate].attributes.fan_mode == 'low') return 'mid';
+                    if (states[variables.climate].attributes.fan_mode == 'mid') return 'high';
+                    if (states[variables.climate].attributes.fan_mode == 'high') return 'auto';
+                    else return 'low';
+                  ]]]      
+
+        #       TASTO IMPOSTAZIONI
+        setting:
+          card:
+            type: custom:button-card
+            icon: mdi:cog-outline
+            template: button_climate
+            styles:
+              icon:
+                - color: |
+                    [[[
+                      if (states["input_select.setting_card_"+variables.name].state == 'off') return 'rgba(120, 120, 120, 1)';
+                      else return 'rgba(204, 228, 230, 1)';
+                    ]]]
+            tap_action:
+              action: call-service
+              service: input_select.select_next
+              service_data:
+                entity_id: '[[[ return "input_select.setting_card_"+variables.name ]]]'
+            hold_action:
+              action: call-service
+              service: input_select.select_option
+              service_data:
+                entity_id: '[[[ return "input_select.setting_card_"+variables.name ]]]'
+                option: 'off'
+
+        #       TASTO ON/OFF
+        power:
+          card:
+            type: custom:button-card
+            icon: mdi:power
+            template: button_climate
+            styles:
+              icon:
+                - width: 100%
+                - color: |
+                    [[[
+                      if (states[variables.climate].state == 'off') return 'rgba(120, 120, 120, 1)';
+                      else return 'rgba(255, 0, 0, 1)';
+                    ]]] 
+            tap_action:
+              action: call-service
+              service: |
+                [[[
+                  if (states[variables.climate].state == 'off') return 'climate.turn_on';
+                  else return 'climate.turn_off';
+                ]]]
+              service_data:
+                entity_id: '[[[ return variables.climate ]]]'
+
+        #       TASTO AUMENTA TEMPERATURA
+        plus:
+          card:
+            type: custom:button-card
+            icon: mdi:plus-thick
+            template: button_climate
+            tap_action:
+              action: call-service
+              service: climate.set_temperature
+              service_data:
+                entity_id: '[[[ return variables.climate ]]]'
+                temperature: "[[[ return states[variables.climate].attributes.temperature + 1; ]]]"
+
+        #       TASTO DIMINUISCI TEMPERATURA
+        less:
+          card:
+            type: custom:button-card
+            icon: mdi:minus-thick
+            template: button_climate
+            tap_action:
+              action: call-service
+              service: climate.set_temperature
+              service_data:
+                entity_id: '[[[ return variables.climate ]]]'
+                temperature: "[[[ return states[variables.climate].attributes.temperature - 1; ]]]"
+
         ##############################################################################
         #
         #             DISPLAY
         #
         #########################################################################
 
-        #       GENERALE
+        #       GENERALE 
         display:
           card:
             type: custom:button-card
@@ -140,7 +278,7 @@
                   - position: absolute
                   - left: 0px
                   - top: 165px
-                auto:
+                automation:
                   - position: absolute
                   - left: 53px
                   - top: 165px
@@ -152,13 +290,13 @@
                   - position: absolute
                   - top: 77px
                   - left: 140px
-                time:
+                states:
                   - position: absolute
                   - top: 0px
                   - left: 0px
 
             custom_fields:
-              time:
+              states:
                 card:
                   type: custom:button-card
                   template: info_display
@@ -240,7 +378,7 @@
                               return "mdi:fire";
                           ]]]
 
-              auto:
+              automation:
                 card:
                   type: custom:button-card
                   name: >-
@@ -392,6 +530,53 @@
                     service: input_select.select_next
                     service_data:
                       entity_id: '[[[ return "input_select.season_of_use_"+variables.name ]]]'
+              line_3:
+                card:
+                  type: custom:button-card
+                  template: display_setting_on_off
+                  name: >-
+                    [[[ return ('Set:
+                    ')+states['input_number.set_temperature_'+variables.name].state + ('
+                    °C')]]]
+                  label: >-
+                    [[[ return ('Fan:
+                    ')+states['select.fan_modes_'+variables.name].state ]]]
+                  tap_action:
+                    action: more-info
+                    entity: '[[[ return "input_number.set_temperature_"+variables.name ]]]'
+                  hold_action:
+                    action: call-service
+                    service: select.select_next
+                    service_data:
+                      entity_id: '[[[ return "select.fan_modes_"+variables.name ]]]'
+              line_4:
+                card:
+                  type: custom:button-card
+                  template: display_setting_on_off
+                  name: >-
+                    [[[ return ('Mode:
+                    ')+states['input_select.hvac_modes_'+variables.name].state]]]
+                  label: |-
+                    [[[
+                      let season = states['input_select.season_of_use_'+variables.name].state;
+                      if (season !== 'Estate Gradi Celsius') 
+                      return ' ';
+                      else 
+                        return ('Umidità on: ')+parseInt(states['input_number.humidity_auto_on_summer_'+variables.name].state) + (' %');
+                    ]]]  
+                  tap_action:
+                    action: call-service
+                    service: input_select.select_next
+                    service_data:
+                      entity_id: '[[[ return "input_select.hvac_modes_"+variables.name ]]]'
+                  hold_action:
+                    action: more-info
+                    entity: >-
+                      [[[
+                      let season =
+                      states['input_select.season_of_use_'+variables.name].state;
+                      if (season === 'Estate Gradi Celsius') 
+                      return "input_number.humidity_auto_on_summer_"+variables.name; ]]]
               line_5:
                 card:
                   type: custom:button-card
@@ -432,53 +617,6 @@
                   hold_action:
                     action: more-info
                     entity: '[[[ return "input_number.delay_auto_on_"+variables.name ]]]'
-              line_4:
-                card:
-                  type: custom:button-card
-                  template: display_setting_on_off
-                  name: >-
-                    [[[ return ('Mode:
-                    ')+states['input_select.hvac_modes_'+variables.name].state]]]
-                  label: |-
-                    [[[
-                      let season = states['input_select.season_of_use_'+variables.name].state;
-                      if (season !== 'Estate Gradi Celsius') 
-                      return ' ';
-                      else 
-                        return ('Umidità on: ')+parseInt(states['input_number.humidity_auto_on_summer_'+variables.name].state) + (' %');
-                    ]]]  
-                  tap_action:
-                    action: call-service
-                    service: input_select.select_next
-                    service_data:
-                      entity_id: '[[[ return "input_select.hvac_modes_"+variables.name ]]]'
-                  hold_action:
-                    action: more-info
-                    entity: >-
-                      [[[
-                      let season =
-                      states['input_select.season_of_use_'+variables.name].state;
-                      if (season === 'Estate Gradi Celsius') 
-                      return "input_number.humidity_auto_on_summer_"+variables.name; ]]]
-              line_3:
-                card:
-                  type: custom:button-card
-                  template: display_setting_on_off
-                  name: >-
-                    [[[ return ('Set:
-                    ')+states['input_number.set_temperature_'+variables.name].state + ('
-                    °C')]]]
-                  label: >-
-                    [[[ return ('Fan:
-                    ')+states['input_select.fan_modes_'+variables.name].state ]]]
-                  tap_action:
-                    action: more-info
-                    entity: '[[[ return "input_number.set_temperature_"+variables.name ]]]'
-                  hold_action:
-                    action: call-service
-                    service: input_select.select_next
-                    service_data:
-                      entity_id: '[[[ return "input_select.fan_modes_"+variables.name ]]]'
 
         #       IPOSTAZIONI pag.2
         display_setting_2:
@@ -520,6 +658,46 @@
                     service: input_select.select_next
                     service_data:
                       entity_id: '[[[ return "input_select.season_of_use_"+variables.name ]]]'
+              line_3:
+                card:
+                  type: custom:button-card
+                  template: display_setting_on_off
+                  name: "[[[ return ('Set: ')+states['input_number.set_temperature_'+variables.name].state + ('°C')]]]"
+                  label: "[[[ return ('Fan: ')+states['select.fan_modes_'+variables.name].state ]]]"
+                  tap_action:
+                    action: more-info
+                    entity: '[[[ return "input_number.set_temperature_"+variables.name ]]]'
+                  hold_action:
+                    action: call-service
+                    service: select.select_next
+                    service_data:
+                      entity_id: '[[[ return "select.fan_modes_"+variables.name ]]]'
+              line_4:
+                card:
+                  type: custom:button-card
+                  template: display_setting_on_off
+                  name: "[[[ return ('Mode: ')+states['input_select.hvac_modes_'+variables.name].state]]]"
+                  label: |-
+                    [[[
+                      let season = states['input_select.season_of_use_'+variables.name].state;
+                      if (season !== 'Estate Gradi Celsius') 
+                      return ' ';
+                      else 
+                        return ('Umidità off: ')+parseInt(states['input_number.humidity_auto_off_summer_'+variables.name].state) + (' %');
+                    ]]]  
+                  tap_action:
+                    action: call-service
+                    service: input_select.select_next
+                    service_data:
+                      entity_id: '[[[ return "input_select.hvac_modes_"+variables.name ]]]'
+                  hold_action:
+                    action: more-info
+                    entity: >-
+                      [[[
+                      let season =
+                      states['input_select.season_of_use_'+variables.name].state;
+                      if (season === 'Estate Gradi Celsius') 
+                      return "input_number.humidity_auto_off_summer_"+variables.name; ]]]
               line_5:
                 card:
                   type: custom:button-card
@@ -558,46 +736,6 @@
                   hold_action:
                     action: more-info
                     entity: '[[[ return "input_number.delay_auto_off_"+variables.name ]]]'
-              line_4:
-                card:
-                  type: custom:button-card
-                  template: display_setting_on_off
-                  name: "[[[ return ('Mode: ')+states['input_select.hvac_modes_'+variables.name].state]]]"
-                  label: |-
-                    [[[
-                      let season = states['input_select.season_of_use_'+variables.name].state;
-                      if (season !== 'Estate Gradi Celsius') 
-                      return ' ';
-                      else 
-                        return ('Umidità off: ')+parseInt(states['input_number.humidity_auto_off_summer_'+variables.name].state) + (' %');
-                    ]]]  
-                  tap_action:
-                    action: call-service
-                    service: input_select.select_next
-                    service_data:
-                      entity_id: '[[[ return "input_select.hvac_modes_"+variables.name ]]]'
-                  hold_action:
-                    action: more-info
-                    entity: >-
-                      [[[
-                      let season =
-                      states['input_select.season_of_use_'+variables.name].state;
-                      if (season === 'Estate Gradi Celsius') 
-                      return "input_number.humidity_auto_off_summer_"+variables.name; ]]]
-              line_3:
-                card:
-                  type: custom:button-card
-                  template: display_setting_on_off
-                  name: "[[[ return ('Set: ')+states['input_number.set_temperature_'+variables.name].state + ('°C')]]]"
-                  label: "[[[ return ('Fan: ')+states['input_select.fan_modes_'+variables.name].state ]]]"
-                  tap_action:
-                    action: more-info
-                    entity: '[[[ return "input_number.set_temperature_"+variables.name ]]]'
-                  hold_action:
-                    action: call-service
-                    service: input_select.select_next
-                    service_data:
-                      entity_id: '[[[ return "input_select.fan_modes_"+variables.name ]]]'
 
         #       IPOSTAZIONI pag.3
         display_setting_3:
@@ -642,15 +780,23 @@
                     service: input_boolean.toggle
                     service_data:
                       entity_id: '[[[ return "input_boolean.check_window_"+variables.name ]]]'
-              line_5:
+              line_3:
                 card:
                   type: custom:button-card
                   template: display_setting_on_off
-                  name: Reset statistiche
-                  label: '[[[ return states[''input_text.data_reset_''+variables.name].state]]]'
-                  hold_action:
+                  name: |
+                    [[[
+                      if (states['input_boolean.presence_'+variables.name].state === 'on') 
+                      return "Presenza: ATTIVO";
+                      else 
+                        return 'Presenza: NON ATTIVO';
+                    ]]]  
+                  label: ' '
+                  tap_action:
                     action: call-service
-                    service: '[[[ return ''script.reset_statistic_''+variables.name ]]]'
+                    service: input_boolean.toggle
+                    service_data:
+                      entity_id: '[[[ return "input_boolean.presence_"+variables.name ]]]'
               line_4:
                 card:
                   type: custom:button-card
@@ -670,23 +816,15 @@
                       entity_id: >-
                         [[[ return
                         "automation.controllo_contenitore_scarico_acqua_"+variables.name ]]]
-              line_3:
+              line_5:
                 card:
                   type: custom:button-card
                   template: display_setting_on_off
-                  name: |
-                    [[[
-                      if (states['input_boolean.presence_'+variables.name].state === 'on') 
-                      return "Presenza: ATTIVO";
-                      else 
-                        return 'Presenza: NON ATTIVO';
-                    ]]]  
-                  label: ' '
-                  tap_action:
+                  name: Reset statistiche
+                  label: '[[[ return states[''input_text.data_reset_''+variables.name].state]]]'
+                  hold_action:
                     action: call-service
-                    service: input_boolean.toggle
-                    service_data:
-                      entity_id: '[[[ return "input_boolean.presence_"+variables.name ]]]'
+                    service: '[[[ return ''script.reset_statistic_''+variables.name ]]]'
 
         #       IPOSTAZIONI pag.4
         display_setting_4:
@@ -783,144 +921,14 @@
                   tap_action:
                     action: more-info
                     entity: '[[[ return "input_datetime.temp_ext_off_"+variables.name ]]]'
-        ####################################################################
-        #
-        #       TASTI TELECOMANDO
-        #
-        ####################################################################
 
-        statistic:
-          card:
-            type: custom:button-card
-            icon: mdi:chart-bell-curve
-            template: button_climate
-            tap_action:
-              action: call-service
-              service: input_boolean.toggle
-              service_data:
-                entity_id: '[[[ return "input_boolean.statistic_"+variables.name ]]]'
-            styles:
-              icon:
-                - color: |
-                    [[[
-                      if (states["input_boolean.statistic_"+variables.name].state == 'off') return 'rgba(120, 120, 120, 1)';
-                      else return 'rgba(204, 228, 230, 1)';
-                    ]]]
-
-        mode:
-          card:
-            type: custom:button-card
-            icon: mdi:air-filter
-            template: button_climate
-            tap_action:
-              action: call-service
-              service: climate.set_hvac_mode
-              service_data:
-                entity_id: '[[[ return variables.climate ]]]'
-                hvac_mode: |
-                  [[[
-                    if (states[variables.climate].attributes.last_on_operation == 'cool') return 'dry';
-                    if (states[variables.climate].attributes.last_on_operation == 'dry') return 'fan_only';
-                    if (states[variables.climate].attributes.last_on_operation == 'fan_only') return 'heat';
-                    else return 'cool';
-                  ]]]      
-
-        fan:
-          card:
-            type: custom:button-card
-            icon: mdi:fan
-            template: button_climate
-            tap_action:
-              action: call-service
-              service: climate.set_fan_mode
-              service_data:
-                entity_id: '[[[ return variables.climate ]]]'
-                fan_mode: |
-                  [[[
-                    if (states[variables.climate].attributes.fan_mode == 'low') return 'mid';
-                    if (states[variables.climate].attributes.fan_mode == 'mid') return 'high';
-                    if (states[variables.climate].attributes.fan_mode == 'high') return 'auto';
-                    else return 'low';
-                  ]]]      
-
-        setting:
-          card:
-            type: custom:button-card
-            icon: mdi:cog-outline
-            template: button_climate
-            styles:
-              icon:
-                - color: |
-                    [[[
-                      if (states["input_select.setting_card_"+variables.name].state == 'off') return 'rgba(120, 120, 120, 1)';
-                      else return 'rgba(204, 228, 230, 1)';
-                    ]]]
-            tap_action:
-              action: call-service
-              service: input_select.select_next
-              service_data:
-                entity_id: '[[[ return "input_select.setting_card_"+variables.name ]]]'
-            hold_action:
-              action: call-service
-              service: input_select.select_option
-              service_data:
-                entity_id: '[[[ return "input_select.setting_card_"+variables.name ]]]'
-                option: 'off'
-
-        power:
-          card:
-            type: custom:button-card
-            icon: mdi:power
-            template: button_climate
-            styles:
-              icon:
-                - width: 100%
-                - color: |
-                    [[[
-                      if (states[variables.climate].state == 'off') return 'rgba(120, 120, 120, 1)';
-                      else return 'rgba(107, 179, 214, 1)';
-                    ]]] 
-            tap_action:
-              action: call-service
-              service: |
-                [[[
-                  if (states[variables.climate].state == 'off') return 'climate.turn_on';
-                  else return 'climate.turn_off';
-                ]]]
-              service_data:
-                entity_id: '[[[ return variables.climate ]]]'
-
-        plus:
-          card:
-            type: custom:button-card
-            icon: mdi:plus-thick
-            template: button_climate
-            tap_action:
-              action: call-service
-              service: climate.set_temperature
-              service_data:
-                entity_id: '[[[ return variables.climate ]]]'
-                temperature: "[[[ return states[variables.climate].attributes.temperature + 1; ]]]"
-
-        less:
-          card:
-            type: custom:button-card
-            icon: mdi:minus-thick
-            template: button_climate
-            tap_action:
-              action: call-service
-              service: climate.set_temperature
-              service_data:
-                entity_id: '[[[ return variables.climate ]]]'
-                temperature: "[[[ return states[variables.climate].attributes.temperature - 1; ]]]"
         ####################################################################
         #       IMMAGINE
         ####################################################################
         image: >
-          <svg width="294" height="601" viewBox="0 0 294 601" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="294" height="601" viewBox="0 0 294 601" fill="none">
           <g filter="url(#filter0_d_23_8)">
           <path d="M21.9227 552.203V479.591C2.4621 437.45 -4.02479 382.343 21.9227 338.906V46.5134C90.0354 -1.46231 184.744 -20.2636 270.372 46.5134V338.906C296.968 386.233 294.374 436.802 270.372 479.591V552.203C224.963 594.344 88.0894 617.035 21.9227 552.203Z" fill="#D9D9D9"/>
-          </g>
           <path d="M248.318 30.9535C192.531 -8.59402 108.201 -10.539 46.5749 30.9535V347.334H248.318V30.9535Z" fill="#3A3A3A"/>
           <path d="M266.924 410.869C266.924 477.354 212.996 531.253 146.47 531.253C79.944 531.253 26.0156 477.354 26.0156 410.869C26.0156 344.383 79.944 290.484 146.47 290.484C212.996 290.484 266.924 344.383 266.924 410.869Z" fill="#3A3A3A" stroke="#1A1A1A" stroke-width="3"/>
           <path d="M59.1741 361.834C59.1741 361.834 59.1745 361.834 59.1753 361.834L59.1741 361.834ZM141.78 416.25C165.686 430.044 187.628 442.034 203.784 450.27C211.857 454.386 218.508 457.576 223.245 459.586C225.605 460.587 227.537 461.315 228.952 461.714C229.647 461.91 230.3 462.051 230.852 462.079C231.124 462.093 231.461 462.085 231.8 461.99C232.144 461.893 232.632 461.661 232.939 461.129C233.246 460.598 233.203 460.06 233.115 459.713C233.028 459.372 232.866 459.077 232.718 458.848C232.418 458.385 231.97 457.89 231.452 457.386C230.399 456.361 228.802 455.053 226.754 453.511C222.645 450.415 216.555 446.254 208.952 441.324C193.737 431.459 172.376 418.462 148.47 404.669C124.565 390.875 102.622 378.884 86.4666 370.648C78.3936 366.532 71.7424 363.342 67.0055 361.333C64.6456 360.332 62.7132 359.603 61.2986 359.204C60.6032 359.008 59.95 358.867 59.3988 358.839C59.1263 358.825 58.7893 358.833 58.4508 358.929C58.106 359.025 57.6183 359.257 57.3111 359.789C57.0039 360.321 57.0471 360.859 57.1355 361.205C57.2224 361.546 57.3838 361.842 57.5321 362.071C57.832 362.534 58.2806 363.029 58.7982 363.532C59.8511 364.557 61.4487 365.866 63.496 367.408C67.6056 370.503 73.6955 374.665 81.2984 379.594C96.5129 389.459 117.875 402.456 141.78 416.25Z" stroke="#1A1A1A" stroke-width="3"/>
@@ -932,8 +940,6 @@
           <path d="M55.6501 27.712C120.519 -10.5389 190.578 -1.46242 240.528 27.712" stroke="#CBB9B8" stroke-linecap="round"/>
           <g filter="url(#filter1_i_23_8)">
           <path d="M55.6501 49.1064H237.284V260.459H55.6501V49.1064Z" fill="#CCE4E6"/>
-          </g>
-          <defs>
           <filter id="filter0_d_23_8" x="0.808655" y="3.1961" width="292.55" height="597.563" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
           <feFlood flood-opacity="0" result="BackgroundImageFix"/>
           <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
@@ -943,7 +949,6 @@
           <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
           <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_23_8"/>
           <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_23_8" result="shape"/>
-          </filter>
           <filter id="filter1_i_23_8" x="55.6501" y="49.1064" width="181.634" height="215.352" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
           <feFlood flood-opacity="0" result="BackgroundImageFix"/>
           <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
@@ -953,6 +958,4 @@
           <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1"/>
           <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
           <feBlend mode="normal" in2="shape" result="effect1_innerShadow_23_8"/>
-          </filter>
-          </defs>
           </svg>
