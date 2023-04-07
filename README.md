@@ -4,11 +4,12 @@ Questo progetto è utilizzabile in tre modalità diverse.
 - [Card base per telecomando](#card-base-per-telecomando)
   - [Requisiti](#requisiti-card-base)
   - [Funzioni card](#funzioni-card)
-  - [Installazione](#installazione-card-base)
+  - [Caricamento](#caricamento-card-base)
 - [Card avanzata con pkg per gestione automazioni e statistiche](#card-avanzata-con-pkg-per-gestione-automazioni-e-statistiche)
   - [Requisiti](#requisiti-pkg)
   - [Funzionamento pkg](#funzionamento-pkg)
   - [Funzioni card ](#funzioni-card-pkg)
+  - [Caricamento](#caricamento-card-e-pkg)
 - [Blueperint per gestione automazione](#blueperint-per-gestione-automazione)
   - [Requisiti](#requisiti-blueprint)
   - [Funzioni blueprint](#funzioni-blueprint)
@@ -33,7 +34,7 @@ La card è realizzata con immagine svg e custom button-card
   - **7:** con un tap è possibile diminuire la temperatura impostata
  <img src="https://user-images.githubusercontent.com/62516592/230679944-f0c45d7c-95cd-42da-9c99-498a5de8c6fe.jpg" width="200" >
  
-### Installazione card base:
+### Caricamento card base:
 Per eseguire la card basta copiare il file all'interno di una nuova card manuale e sostituire la variabile climate con la propria entità
 
 ``` 
@@ -111,6 +112,25 @@ group:
  <img src="https://user-images.githubusercontent.com/62516592/230681339-1a0ca9c5-5e31-4327-8e60-494acac2bfe9.jpg" width="200" >
  <img src="https://user-images.githubusercontent.com/62516592/230681353-a568a529-7292-49a4-bc04-7b0ac99d903e.jpg" width="200" >
 
+### Caricamento card e pkg
+- **Caricamento pkg:**
+  - caricare l'intera cartella **xxxxxxx** nella cartella packages
+  - Aprire ogni singolo file e sostituire le entità presenti negli anchor
+  - Modificare gli array del con le proprie entità nei file **xxxx**
+  - Se si vuole utilizzare il pkg per un secondo condizionatore occorre sostistuire OVUNQUE la parola ac_salone con una nuova a piacimento
+  - **aggiungere** notifiche **TERMINARE**
+  - **aggiungere** costo euro
+  
+- **Caricamento card:**
+  - Per eseguire la card basta copiare il file all'interno della propria dashboard yaml
+  - cambiare la variabile climate con la propria entità
+  - cambiare (se precedentemente sostituito) la variabile name con quello personalizzato
+``` 
+type: custom:button-card
+variables:
+  climate: climate.condizionatore_salone
+  name: ac_salone
+```
 # Blueperint per gestione automazione:
 ### Requisiti Blueprint
 
