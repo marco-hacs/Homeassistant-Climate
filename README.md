@@ -1,19 +1,37 @@
-# homeassistant-climate
+# Homeassistant-climate
 
 Questo progetto è utilizzabile in tre modalità diverse.
 - [Card base per telecomando](#card-base-per-telecomando)
+  - [Requisiti](#requisiti-card-base)
+  - [Funzioni card](#funzioni-card)
+  - [Installazione](#installazione-card-base)
 - [Card avanzata con pkg per gestione automazioni e statistiche](#card-avanzata-con-pkg-per-gestione-automazioni-e-statistiche)
+  - [Requisiti](#requisiti-pkg)
+  - [Funzionamento pkg](#funzionamento-pkg)
+  - [Funzioni card ](#funzioni-card-pkg)
 - Blueperint per gestione automazione.
 
 ## Card base per telecomando:
-### Requisiti: # aggiungere immagine
+ <img src="https://user-images.githubusercontent.com/62516592/230682774-197c62dc-205e-47e4-8195-d32e354635cc.jpg" width="200">
+ 
+### Requisiti card base:
 - [custom button card](https://github.com/custom-cards/button-card)
 - [integrazione smart ir](https://github.com/smartHomeHub/SmartIR)
-### Funzionamento
+### Funzioni card:
 Questa card permette di simulare il telecomando per entità climate e non è vincolato all'utilizzo di altri file.
 La card è realizzata con immagine svg e custom button-card
-#### tastiiiiiiiiiiiiiiiiiiiii
-### Installazione
+
+  - **Display standard:** sul display è possibile visualizzare lo stato del condizionatore (spento o acceso), la temperatura impostata, la modalità hvca impostata, la velocità di ventilazione impostata, la temperatura ed umidità interna.
+  - **1:** con un tap il condizionatore si accende o si spegne
+  - **2:** con un tap è possibile cambiare la ventilazione
+  - **3:** con un tap è possibile cambiare la modalità hvca (dry, cool, auto...)
+  - **4:** con un tap è possibile aumentare la temperatura impostata
+  - **5:** con un tap è possibile personalizzare la action. Di default apre more-info del condizionatore
+  - **6:** con un tap è possibile personalizzare la action. Di default apre more-info del condizionatore
+  - **7:** con un tap è possibile diminuire la temperatura impostata
+ <img src="https://user-images.githubusercontent.com/62516592/230679944-f0c45d7c-95cd-42da-9c99-498a5de8c6fe.jpg" width="200" >
+ 
+### Installazione card base:
 Per eseguire la card basta copiare il file all'interno di una nuova card manuale e sostituire la variabile climate con la propria entità
 
 ``` 
@@ -23,14 +41,15 @@ variables:
 ```
 
 # Card avanzata con pkg per gestione automazioni e statistiche
-### Requisiti: # aggiungere video
+https://user-images.githubusercontent.com/62516592/230683695-5766ce0c-f760-4e4b-99d1-73056ebbfd53.mp4
+### Requisiti pkg: 
 - [custom button card](https://github.com/custom-cards/button-card) con template abilitato
 - [integrazione smart ir](https://github.com/smartHomeHub/SmartIR)
 - dashboard in modalità yaml
 - sensore finestra (non indispensabile)
 - sensore allagamento (non indispensabile)
 - sensore assorbimento in w (non indispensabile)
-### Funzionamento
+### Funzionamento pkg:
 Questo utilizzo è sicuramente il più complesso ma anche il più completo, perchè prevede il funzionamento del condizionatore in modalità automatica tenendo in considerazione diversi fattori:
 - **Modalità o periodo utilizzo:** È possibile scegliere 4 modalità di funzionamento:
   - [Estate Indice di thom:](https://indomus.it/progetti/definire-un-indicatore-di-benessere-estivo-sulla-domotica-home-assistant/) Il condizionatore si accenderà o spegnerà se l'indice di thom rilevato è maggiore o inferiore a quello impostato
@@ -52,6 +71,7 @@ group:
       - person.marco
       - person.serena
 ```
+- **Notifiche:** si può decidere se abilitare o disabilitare le notifiche. Di default nel pkg è impostato per riceverle su tutti i device con app companion installata. Nel caso si volessero utilizzare device diversi o media_player occorre modificarle.
 - **Stato Finestre:** viene eseguito un controllo sullo stato finestre:
     - Se il condizionatore è acceso e la finestra viene aperta si riceve un avviso di chiudere la finestra, se questo non avviene entro 30 secondi il condizionatore verrà spento.
     - Se il condiziontore è spento e viene acceso manualmente con la finestra aperta si riceverà una notifica di avviso
@@ -66,3 +86,25 @@ group:
   - se il condizionatore è acceso ed il serbatoio è pieno da 5 minuti il condizionatore si spegnerà con notifica
   - se il serbatoio è pieno e verrà acceso il condizionatore, riceverai una notifica per svuotarlo
   - se accendi il condizionatore ed il serbatoio è pieno ma non verrà svuotato entro 5 minuti si spegnerà con notifica.
+- **Statistiche utilizzo:** Utilizzando un dispositivo per rilevare la potenza assorbita, nel mio caso shelly-em puoi vedere visualizzare, il tempo di accensione, il costo ed il consumo del condizionatore senza utilizzo del recorder ed avendo la possibilità resettare i dati in qualsiasi momento.
+### Funzioni card pkg:
+  - **Display standard:** sul display è possibile visualizzare lo stato del condizionatore (spento o il tempo di accesione), la temperatura impostata, la modalità hvca impostata, la velocità di ventilazione impostata, la temperatura ed umidità interna e se attivo o disattivo l'accensione e lo spegnimento automatico.
+ <img src="https://user-images.githubusercontent.com/62516592/230679628-4aa84cd4-3cbd-45fe-87e7-e33b6362e0dd.jpg" width="200" >
+ 
+  - **1:** con un tap il condizionatore si accende o si spegne
+  - **2:** con un tap è possibile cambiare la ventilazione
+  - **3:** con un tap è possibile cambiare la modalità hvca (dry, cool, auto...)
+  - **4:** con un tap è possibile aumentare la temperatura impostata
+  - **5:** con un tap è possibile visualizzare a display le 4 pagine di impostazioni, con un hold tap è possibile forzare l'uscita dal menu
+  - **6:** con un tap è possibile visualizzare a display le statistiche
+  - **7:** con un tap è possibile diminuire la temperatura impostata
+ <img src="https://user-images.githubusercontent.com/62516592/230679944-f0c45d7c-95cd-42da-9c99-498a5de8c6fe.jpg" width="200">
+ 
+  - **Display statistiche**: questa schermata è solo informativa e non è possibile interagire
+ <img src="https://user-images.githubusercontent.com/62516592/230681033-1e8d73eb-9df6-4b3a-8e85-5f1b748f2185.jpg" width="200">
+
+  - **Display impostazioni**: ogni pagina è composta da 5 sezioni, molte delle quali da due righe, per cambiare le impostazioni basta eseguire un tap per modificare i valori che si trovano sulla prima riga mentre un hold tap per selezionare la seconda riga dove presente
+
+<img src="https://user-images.githubusercontent.com/62516592/230681298-782bfe27-80ac-401c-a02b-647845cdeadc.jpg" width="200" > <img src="https://user-images.githubusercontent.com/62516592/230681321-41e9f25a-0914-4d77-8749-6c3d2827ca2a.jpg" width="200" >
+ <img src="https://user-images.githubusercontent.com/62516592/230681339-1a0ca9c5-5e31-4327-8e60-494acac2bfe9.jpg" width="200" >
+ <img src="https://user-images.githubusercontent.com/62516592/230681353-a568a529-7292-49a4-bc04-7b0ac99d903e.jpg" width="200" >
