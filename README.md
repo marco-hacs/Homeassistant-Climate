@@ -53,17 +53,17 @@ group:
       - person.marco
       - person.serena
 ```
-
 - **Stato Finestre:** viene eseguito un controllo sullo stato finestra:
     - Se condizionatore acceso e la finestra viene aperta si riceve inizialmente un avviso di chiudere la finestra, se non avviene entro 30 secondi il condizionatore viene spento.
     - Se condiziontore è spento e viene acceso manualmente con finestra aperta si riceve una notifica di avviso
-    - Se accensione automatica attivo e ci sono i requisiti per accendere il condizionatore ma la finestra è aperta si riceve una notifica di avviso
-    
-    
-    
-    
+    - Se accensione automatica attivo e ci sono i requisiti per accendere il condizionatore ma la finestra è aperta si riceve una notifica di avviso   
 - **Temperatura esterna:** Viene eseguita in due modalità
    - Rispettando una sua fascia oraria è possibile impostare una differenza di temperatura istantanea rilevata tra interna ed esterne che consiglia di aprire o chiudere la finestra (se controllo finestra attivo ne verifica lo stato). 
    - Legata allo stato condizionatore:
       - Nel momento in cui il condizionatore si deve accendere in automatico ma la temperatura esterna è maggiore/minore (in base alla modalità impostata) di quella target. Non avviene l'accensione del condizionatore ma si riceve un notifica di avviso di aprire la finestra.
       - Se il condizionatore è acceso ma la temperatura esterna è maggiore/minore (in base alla modalità impostata) di quella target. Si riceve una notifica consigliando di aprire o chiudere la finestra e spegnere il condizionatore.
+- **Livello acqua:** utilizzo un sensore allagamento aqara per controllare lo stato del serbatoio dove scarico l'acqua del condizionatore.
+  - se il condizionatore è acceso ed il serbatoio si riempie ricevi una notifica per avvisarti di svuotarlo
+  - se il condizionatore è acceso ed il serbatoio è pieno da 5 minuti il condizionatore si spegne con avviso del notifica
+  - se il serbatoio è pieno e viene acceso il condizionatore, ricevi una notifica per svuotarlo
+  - se accendi il condizionatore con serbatoio pieno e non viene svuotato entro 5 minuti il condizionatore si spegne con notifica.
