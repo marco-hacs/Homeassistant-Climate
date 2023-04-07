@@ -10,6 +10,7 @@ Questo progetto è utilizzabile in tre modalità diverse.
   - [Funzionamento pkg](#funzionamento-pkg)
   - [Funzioni card ](#funzioni-card-pkg)
 - Blueperint per gestione automazione.
+  - [Requisiti](#requisiti-blueprint)
 
 ## Card base per telecomando:
  <img src="https://user-images.githubusercontent.com/62516592/230682774-197c62dc-205e-47e4-8195-d32e354635cc.jpg" width="200">
@@ -108,3 +109,60 @@ group:
 <img src="https://user-images.githubusercontent.com/62516592/230681298-782bfe27-80ac-401c-a02b-647845cdeadc.jpg" width="200" > <img src="https://user-images.githubusercontent.com/62516592/230681321-41e9f25a-0914-4d77-8749-6c3d2827ca2a.jpg" width="200" >
  <img src="https://user-images.githubusercontent.com/62516592/230681339-1a0ca9c5-5e31-4327-8e60-494acac2bfe9.jpg" width="200" >
  <img src="https://user-images.githubusercontent.com/62516592/230681353-a568a529-7292-49a4-bc04-7b0ac99d903e.jpg" width="200" >
+
+# Blueperint per gestione automazione:
+### Requisiti Blueprint
+
+A differenza di quanto trattato sopra questo progetto è compatibile con tutte le entità climate 
+- Entità climate configurata
+Facoltativo:
+- Sensore finestra
+- Sensore allagamento
+
+https://github.com/marco-hacs/Blueprint-Automatic-air-conditioner
+
+Questo progetto prevede l'utilizzo automatico del climatizzatore sia in inverno che in estate, in base a una temperatura iniziale e finale. In modo facoltativo, si può abilitare:
+
+- Controllo dello stato della finestra
+- Controllo del livello dell'acqua nel serbatoio
+- Controllo della presenza domestica
+- Notifiche (inglese e italiano)
+- Decidere la fascia oraria per il funzionamento
+
+Di seguito le impostazioni per il funzionamento sono:
+
+1) **Seleziona lingua**: Scegli la lingua per le notifiche (default: italiano).
+2) **Entità clima**: Scegli l'entità clima da utilizzare.
+3) **Seleziona stagione**: Scegli la stagione di utilizzo (predefinito: Estate)
+4) **Imposta temperatura clima**: Seleziona la temperatura da impostare al clima
+5) **Modalità Hvac**: selezionare la modalità di utilizzo Hvac (riscaldamento, raffreddamento, deumidificazione, solo ventilazione)
+6) **Modalità ventola**: selezionare la modalità di utilizzo della ventola (automatica, alta, media, bassa). Nel caso in cui le tue impostazioni climatiche siano diverse dalle mie, queste possono essere personalizzate dal file sorgente.
+7) **Presenza Home**: FACOLTATIVO Selezionare dall'elenco il gruppo creato con entità persona per:
+- Accendere il climatizzatore se sono soddisfatte le condizioni impostate per l'accensione
+- Spegnere il condizionatore d'aria nel momento in cui si passa allo stato fuori casa
+```
+group:
+  famiglia:
+    entities:
+      - person.marco
+      - person.serena
+```
+8) **Livello dell'acqua**. FACOLTATIVO: selezionare il binario\_sensore utilizzato per indicare il serbatoio dell'acqua pieno. Per funzionare, deve essere impostato con *dispositivo\_classe: umidità*.
+9) **Finestra**: FACOLTATIVO selezionare il sensore binario utilizzato per il contatto finestra. Per funzionare deve essere impostato con *device\_class:window*
+10) **Temperatura target di avvio**: Impostare la temperatura di avvio:
+- Se impostato su inverno, il clima verrà attivato se la temperatura interna è inferiore alla temperatura impostata
+- Se impostato su estate, il clima verrà attivato se la temperatura interna è superiore alla temperatura impostata
+11) **Arresto temperatura target**: impostare la temperatura di spegnimento:
+- Se impostato su inverno, il clima verrà disattivato se la temperatura interna è superiore alla temperatura impostata
+- Se impostato su estate, il clima verrà disattivato se la temperatura interna è inferiore alla temperatura impostata
+12) **Ritardo arresto temperatura**: Imposta un ritardo espresso in minuti per lo spegnimento del climatizzatore una volta raggiunto “*Arresto temperatura target*”
+13) **Ora di inizio**: Impostare l'ora di inizio del funzionamento automatico del climatizzatore. NB: Se si desidera che il clima sia automatico h24, impostare Orario di inizio e Orario di fine con l'orario 00:00:00.
+14) **Stop time**: imposta l'ora di fine e di spegnimento del funzionamento automatico della climatizzazione. NB: Se si desidera che il clima sia automatico h24, impostare Orario di inizio e Orario di fine con l'orario 00:00:00.
+15) **Dispositivo per notifica push**: FACOLTATIVO selezionare il dispositivo su cui si desidera ricevere la notifica push. Sul dispositivo deve essere installata l'app ufficiale HomeAssistant.
+
+Questo progetto è stato realizzato rispettando le mie esigenze personali e le entità climatiche utilizzate con Broadlink.
+
+Rimango aperto al feedback e a qualsiasi idea per rendere questo progetto più utilizzabile per tutti.
+
+[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2Fmarco-hacs%2FAutomatic-air-conditioner%2Fblob%2Fmain%2Fautomatic_air_conditioner.yaml)
+https://community.home-assistant.io/t/automatic-air-conditioner/511251
