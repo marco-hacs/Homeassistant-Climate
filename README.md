@@ -9,8 +9,9 @@ Questo progetto è utilizzabile in tre modalità diverse.
   - [Requisiti](#requisiti-pkg)
   - [Funzionamento pkg](#funzionamento-pkg)
   - [Funzioni card ](#funzioni-card-pkg)
-- Blueperint per gestione automazione.
+- [Blueperint per gestione automazione](#blueperint-per-gestione-automazione)
   - [Requisiti](#requisiti-blueprint)
+  - [Funzioni blueprint](#funzioni-blueprint)
 
 ## Card base per telecomando:
  <img src="https://user-images.githubusercontent.com/62516592/230682774-197c62dc-205e-47e4-8195-d32e354635cc.jpg" width="200">
@@ -118,7 +119,7 @@ A differenza di quanto trattato sopra questo progetto è compatibile con tutte l
 Facoltativo:
 - Sensore finestra
 - Sensore allagamento
-
+### Funzioni blueprint:
 https://github.com/marco-hacs/Blueprint-Automatic-air-conditioner
 
 Questo progetto prevede l'utilizzo automatico del climatizzatore sia in inverno che in estate, in base a una temperatura iniziale e finale. In modo facoltativo, si può abilitare:
