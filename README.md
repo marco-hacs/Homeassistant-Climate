@@ -25,6 +25,8 @@ Questa card permette di simulare il telecomando per entità climate e non è vin
 La card è realizzata con immagine svg e custom button-card
 
   - **Display standard:** sul display è possibile visualizzare lo stato del condizionatore (spento o acceso), la temperatura impostata, la modalità hvca impostata, la velocità di ventilazione impostata, la temperatura ed umidità interna.
+ <img src="https://user-images.githubusercontent.com/62516592/230679944-f0c45d7c-95cd-42da-9c99-498a5de8c6fe.jpg" width="200" >
+  
   - **1:** con un tap il condizionatore si accende o si spegne
   - **2:** con un tap è possibile cambiare la ventilazione
   - **3:** con un tap è possibile cambiare la modalità hvca (dry, cool, auto...)
@@ -32,7 +34,6 @@ La card è realizzata con immagine svg e custom button-card
   - **5:** con un tap è possibile personalizzare la action. Di default apre more-info del condizionatore
   - **6:** con un tap è possibile personalizzare la action. Di default apre more-info del condizionatore
   - **7:** con un tap è possibile diminuire la temperatura impostata
- <img src="https://user-images.githubusercontent.com/62516592/230679944-f0c45d7c-95cd-42da-9c99-498a5de8c6fe.jpg" width="200" >
  
 ### Caricamento card base:
 Per eseguire la card basta copiare il file all'interno di una nuova card manuale e sostituire la variabile climate con la propria entità
@@ -91,8 +92,10 @@ group:
   - se accendi il condizionatore ed il serbatoio è pieno ma non verrà svuotato entro 5 minuti si spegnerà con notifica.
 - **Statistiche utilizzo:** Utilizzando un dispositivo per rilevare la potenza assorbita, nel mio caso shelly-em puoi vedere visualizzare, il tempo di accensione, il costo ed il consumo del condizionatore senza utilizzo del recorder ed avendo la possibilità resettare i dati in qualsiasi momento.
 ### Funzioni card pkg:
-  - **Display standard:** sul display è possibile visualizzare lo stato del condizionatore (spento o il tempo di accesione), la temperatura impostata, la modalità hvca impostata, la velocità di ventilazione impostata, la temperatura ed umidità interna e se attivo o disattivo l'accensione e lo spegnimento automatico.
  <img src="https://user-images.githubusercontent.com/62516592/230679628-4aa84cd4-3cbd-45fe-87e7-e33b6362e0dd.jpg" width="200" >
+ 
+  - **Display standard:** sul display è possibile visualizzare lo stato del condizionatore (spento o il tempo di accesione), la temperatura impostata, la modalità hvca impostata, la velocità di ventilazione impostata, la temperatura ed umidità interna e se attivo o disattivo l'accensione e lo spegnimento automatico.
+ <img src="https://user-images.githubusercontent.com/62516592/230679944-f0c45d7c-95cd-42da-9c99-498a5de8c6fe.jpg" width="200">
  
   - **1:** con un tap il condizionatore si accende o si spegne
   - **2:** con un tap è possibile cambiare la ventilazione
@@ -101,17 +104,15 @@ group:
   - **5:** con un tap è possibile visualizzare a display le 4 pagine di impostazioni, con un hold tap è possibile forzare l'uscita dal menu
   - **6:** con un tap è possibile visualizzare a display le statistiche
   - **7:** con un tap è possibile diminuire la temperatura impostata
- <img src="https://user-images.githubusercontent.com/62516592/230679944-f0c45d7c-95cd-42da-9c99-498a5de8c6fe.jpg" width="200">
+ <img src="https://user-images.githubusercontent.com/62516592/230681033-1e8d73eb-9df6-4b3a-8e85-5f1b748f2185.jpg" width="200">
  
   - **Display statistiche**: questa schermata è solo informativa e non è possibile interagire
- <img src="https://user-images.githubusercontent.com/62516592/230681033-1e8d73eb-9df6-4b3a-8e85-5f1b748f2185.jpg" width="200">
-
-  - **Display impostazioni**: ogni pagina è composta da 5 sezioni, molte delle quali da due righe, per cambiare le impostazioni basta eseguire un tap per modificare i valori che si trovano sulla prima riga mentre un hold tap per selezionare la seconda riga dove presente
-
+  
 <img src="https://user-images.githubusercontent.com/62516592/230681298-782bfe27-80ac-401c-a02b-647845cdeadc.jpg" width="200" > <img src="https://user-images.githubusercontent.com/62516592/230681321-41e9f25a-0914-4d77-8749-6c3d2827ca2a.jpg" width="200" >
  <img src="https://user-images.githubusercontent.com/62516592/230681339-1a0ca9c5-5e31-4327-8e60-494acac2bfe9.jpg" width="200" >
  <img src="https://user-images.githubusercontent.com/62516592/230681353-a568a529-7292-49a4-bc04-7b0ac99d903e.jpg" width="200" >
-
+ 
+  - **Display impostazioni**: ogni pagina è composta da 5 sezioni, molte delle quali da due righe, per cambiare le impostazioni basta eseguire un tap per modificare i valori che si trovano sulla prima riga mentre un hold tap per selezionare la seconda riga dove presente
 ### Caricamento card e pkg
 - **Caricamento pkg:**
   - caricare l'intera cartella **xxxxxxx** nella cartella packages
