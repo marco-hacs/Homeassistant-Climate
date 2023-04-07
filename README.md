@@ -10,7 +10,7 @@ Questo progetto è utilizzabile in tre modalità diverse.
 - [custom button card](https://github.com/custom-cards/button-card)
 - [integrazione smart ir](https://github.com/smartHomeHub/SmartIR)
 ### Funzionamento
-Questa card permette di simulare un telecomando per entità climate e non è vincolate all'utilizzo di altri file.
+Questa card permette di simulare il telecomando per entità climate e non è vincolato all'utilizzo di altri file.
 La card è realizzata con immagine svg e custom button-card
 #### tastiiiiiiiiiiiiiiiiiiiii
 ### Installazione
@@ -31,19 +31,18 @@ variables:
 - sensore allagamento (non indispensabile)
 - sensore assorbimento in w (non indispensabile)
 ### Funzionamento
+Questo utilizzo è sicuramente il più complesso ma anche il più completo, perchè prevede il funzionamento del condizionatore in modalità automatica tenendo in considerazione diversi fattori:
 - **Modalità o periodo utilizzo:** È possibile scegliere 4 modalità di funzionamento:
-  - [Estate Indice di thom:](https://indomus.it/progetti/definire-un-indicatore-di-benessere-estivo-sulla-domotica-home-assistant/) Viene valutata la differenza rilevata tra indice thom interno ed esterno per accendere o spegnere il condizionatore.
-  - Estate Gradi Celsius: Viene valutato la differenza di umidità e temperatura impostata per accendere o spegne il condizionatore rispetto alla temperatura e umidità  rilevata
-  - Inverno: Viene valutata solo la temperatura impostata per accendere o spegne il condizionatore rispetto alla temperatura rilevata
-  - Umidità: Viene valutata solo l'umidità impostata per accendere o spegne il condizionatore rispetto all'umidità rilevata
-Questo utilizzo è sicuramente il più complesso ma anche il più completo.
-Prevede il funzionamento del condizionatore in modalità automatica tenendo in considerazione diversi fattori:
+  - [Estate Indice di thom:](https://indomus.it/progetti/definire-un-indicatore-di-benessere-estivo-sulla-domotica-home-assistant/) Il condizionatore si accenderà o spegnerà se l'indice di thom rilevato è maggiore o inferiore a quello impostato
+  - Estate Gradi Celsius: Il condizionatore si accenderà o spegnerà se la temperatura e l'umidità rilevata è maggiore o inferiore a quella impostata
+  - Inverno: Il condizionatore si accenderà o spegnerà se la temperatura rilevata è maggiore o inferiore a quella impostata
+  - Umidità: Il condizionatore si accenderà o spegnerà se l'umidità rilevata è maggiore o inferiore a quella impostata
 - **Temperatura interna rilevata:** in base alla modalità selezionata è possibile impostare una temperatura/umidità/thom rilevata per gestire l'accensione e lo spegnimento del condizionatore in modalita automatica
-- **Velocità ventilazione:** e possibile impostare la velocita di ventilazione al condizionatore da utilizzare con l'accensione automatica
-- **Modalità hvca:** e possibile impostare la modalità hvca (dry,cool,auto...) al condizionatore da utilizzare con l'accensione automatica
-- **Temperatura condizionatore:** e possibile impostare la temperatura al condizionatore da utilizzare con l'accensione automatica
-- **Fascia oraria:** è possibile scegliere una fascia oraria per l'attivazione e spegnimento 
-- **Presenza in casa:** se abilitato le automazioni funzioneranno solo se lo stato del gruppo o della singola entità person si trova nello stato home. Nel caso le person o il gruppo passa nello stato not_home il condizionatore viene spento.
+- **Velocità ventilazione:** è possibile impostare la velocita di ventilazione del condizionatore da utilizzare con l'accensione automatica
+- **Modalità hvca:** è possibile impostare la modalità hvca (dry,cool,auto...) del condizionatore da utilizzare con l'accensione automatica
+- **Temperatura condizionatore:** e possibile impostare la temperatura del condizionatore da utilizzare con l'accensione automatica
+- **Fascia oraria:** è possibile scegliere una fascia oraria per l'attivazione e per lo spegnimento automatico
+- **Presenza in casa:** le automazioni funzioneranno solo se lo stato del gruppo o della singola entità person si trova nello stato home. Se si passa allo stato  not_home il condizionatore verrà spento.
 ```
 # Esempio di un gruppo famiglia
 group:
@@ -53,17 +52,17 @@ group:
       - person.marco
       - person.serena
 ```
-- **Stato Finestre:** viene eseguito un controllo sullo stato finestra:
-    - Se condizionatore acceso e la finestra viene aperta si riceve inizialmente un avviso di chiudere la finestra, se non avviene entro 30 secondi il condizionatore viene spento.
-    - Se condiziontore è spento e viene acceso manualmente con finestra aperta si riceve una notifica di avviso
-    - Se accensione automatica attivo e ci sono i requisiti per accendere il condizionatore ma la finestra è aperta si riceve una notifica di avviso   
+- **Stato Finestre:** viene eseguito un controllo sullo stato finestre:
+    - Se il condizionatore è acceso e la finestra viene aperta si riceve un avviso di chiudere la finestra, se questo non avviene entro 30 secondi il condizionatore verrà spento.
+    - Se il condiziontore è spento e viene acceso manualmente con la finestra aperta si riceverà una notifica di avviso
+    - Se l'accensione automatica è abilitata e ci sono i requisiti per accendere il condizionatore ma la finestra è aperta si riceverà una notifica
 - **Temperatura esterna:** Viene eseguita in due modalità
-   - Rispettando una sua fascia oraria è possibile impostare una differenza di temperatura istantanea rilevata tra interna ed esterne che consiglia di aprire o chiudere la finestra (se controllo finestra attivo ne verifica lo stato). 
-   - Legata allo stato condizionatore:
-      - Nel momento in cui il condizionatore si deve accendere in automatico ma la temperatura esterna è maggiore/minore (in base alla modalità impostata) di quella target. Non avviene l'accensione del condizionatore ma si riceve un notifica di avviso di aprire la finestra.
-      - Se il condizionatore è acceso ma la temperatura esterna è maggiore/minore (in base alla modalità impostata) di quella target. Si riceve una notifica consigliando di aprire o chiudere la finestra e spegnere il condizionatore.
-- **Livello acqua:** utilizzo un sensore allagamento aqara per controllare lo stato del serbatoio dove scarico l'acqua del condizionatore.
-  - se il condizionatore è acceso ed il serbatoio si riempie ricevi una notifica per avvisarti di svuotarlo
-  - se il condizionatore è acceso ed il serbatoio è pieno da 5 minuti il condizionatore si spegne con avviso del notifica
-  - se il serbatoio è pieno e viene acceso il condizionatore, ricevi una notifica per svuotarlo
-  - se accendi il condizionatore con serbatoio pieno e non viene svuotato entro 5 minuti il condizionatore si spegne con notifica.
+   - Rispettando una sua fascia oraria: è possibile impostare una differenza di temperatura rilevata tra interna ed esterne che consiglia di aprire o chiudere la finestra se il controllo finestra è attivo ne verifica anche lo stato (es. quando rileva la temperatura esterna maggiore di 5° rispetto a quella interna)
+   - Legata allo stato del condizionatore:
+      - Nel momento in cui il condizionatore si deve accendere in automatico ma la temperatura esterna è maggiore/minore (in base alla modalità impostata) di quella target, non avviene l'accensione del condizionatore ma si riceverà un notifica per aprire la finestra.
+      - Se il condizionatore è acceso ma la temperatura esterna è maggiore/minore (in base alla modalità impostata) di quella target, si riceverà una notifica per aprire o chiudere la finestra e spegnere il condizionatore.
+- **Livello acqua:** utilizzo un sensore allagamento aqara per controllare lo stato del serbatoio dove scarica l'acqua il condizionatore.
+  - se il condizionatore è acceso ed il serbatoio è pieno ricevi una notifica per svuotarlo
+  - se il condizionatore è acceso ed il serbatoio è pieno da 5 minuti il condizionatore si spegnerà con notifica
+  - se il serbatoio è pieno e verrà acceso il condizionatore, riceverai una notifica per svuotarlo
+  - se accendi il condizionatore ed il serbatoio è pieno ma non verrà svuotato entro 5 minuti si spegnerà con notifica.
