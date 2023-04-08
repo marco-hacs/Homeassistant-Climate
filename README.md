@@ -55,7 +55,7 @@ https://user-images.githubusercontent.com/62516592/230683695-5766ce0c-f760-4e4b-
 ### Requisiti pkg: 
 - [custom button card](https://github.com/custom-cards/button-card) con template abilitato
 - [integrazione smart ir](https://github.com/smartHomeHub/SmartIR)
-- dashboard in modalità yaml
+- dashboard in modalità yaml, ben descritta da [MaxAlbani](https://www.maxalbani.it/2023/04/home-assistant-dashboards-lo-strumento-per-creare-interfacce-grafiche/#modalita)
 - sensore finestra (non indispensabile)
 - sensore allagamento (non indispensabile)
 - sensore assorbimento in w (non indispensabile)
