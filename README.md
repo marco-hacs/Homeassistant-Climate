@@ -2,11 +2,11 @@
 
 Questo progetto è utilizzabile in tre modalità diverse. 
 - Card base per telecomando
-  > E' una card che permette di simulare il telecomando per un'entità climate creata con smart ir
+  > Permette di simulare il telecomando per un'entità climate creata con smart ir
 - Card avanzata con pkg per gestione automazioni e statistiche
-  > E' pacchetto completo per gestire il condizionatore integrato con smart ir in modo automatico con una card più completa rispetto alla precedente
-- Blueperint per gestione automazione
-  > E' un progetto di facile configurazione adatto per tutte le entità climate per la gestione automatica del condizionatore
+  > Pacchetto completo per gestire il condizionatore integrato con smart ir in modo automatico con una card più completa rispetto alla precedente
+- Blueprint per gestione automazione
+  > Progetto di facile configurazione adatto per tutte le entità climate per la gestione automatica del condizionatore
 - [Card base per telecomando](#card-base-per-telecomando)
   - [Requisiti](#requisiti-card-base)
   - [Funzioni card](#funzioni-card)
@@ -16,7 +16,7 @@ Questo progetto è utilizzabile in tre modalità diverse.
   - [Funzionamento pkg](#funzionamento-pkg)
   - [Funzioni card ](#funzioni-card-pkg)
   - [Caricamento](#caricamento-card-e-pkg)
-- [Blueperint per gestione automazione](#blueperint-per-gestione-automazione)
+- [Blueprint per gestione automazione](#blueperint-per-gestione-automazione)
   - [Requisiti](#requisiti-blueprint)
   - [Funzioni blueprint](#funzioni-blueprint)
 
@@ -30,7 +30,7 @@ Questo progetto è utilizzabile in tre modalità diverse.
 Questa card permette di simulare il telecomando per entità climate e non è vincolato all'utilizzo di altri file.
 La card è realizzata con immagine svg e custom button-card
 
-  - **Display standard:** sul display è possibile visualizzare lo stato del condizionatore (spento o acceso), la temperatura impostata, la modalità hvca impostata, la velocità di ventilazione impostata, la temperatura ed umidità interna.
+  - **Display standard:** sul display è possibile visualizzare lo stato del condizionatore (spento o acceso), temperatura, modalità hvca, velocità di ventilazione impostata e la temperatura ed umidità interna.
  <img src="https://user-images.githubusercontent.com/62516592/230679944-f0c45d7c-95cd-42da-9c99-498a5de8c6fe.jpg" width="200" >
   
   - **1:** con un tap il condizionatore si accende o si spegne
@@ -62,16 +62,16 @@ https://user-images.githubusercontent.com/62516592/230683695-5766ce0c-f760-4e4b-
 ### Funzionamento pkg:
 Questo utilizzo è sicuramente il più complesso ma anche il più completo, perchè prevede il funzionamento del condizionatore in modalità automatica tenendo in considerazione diversi fattori:
 - **Modalità o periodo utilizzo:** È possibile scegliere 4 modalità di funzionamento:
-  - [Estate Indice di thom:](https://indomus.it/progetti/definire-un-indicatore-di-benessere-estivo-sulla-domotica-home-assistant/) Il condizionatore si accenderà o spegnerà se l'indice di thom rilevato è maggiore o inferiore a quello impostato
-  - Estate Gradi Celsius: Il condizionatore si accenderà o spegnerà se la temperatura e l'umidità rilevata è maggiore o inferiore a quella impostata
-  - Inverno: Il condizionatore si accenderà o spegnerà se la temperatura rilevata è maggiore o inferiore a quella impostata
-  - Umidità: Il condizionatore si accenderà o spegnerà se l'umidità rilevata è maggiore o inferiore a quella impostata
-- **Temperatura interna rilevata:** in base alla modalità selezionata è possibile impostare una temperatura/umidità/thom rilevata per gestire l'accensione e lo spegnimento del condizionatore in modalita automatica
-- **Velocità ventilazione:** è possibile impostare la velocita di ventilazione del condizionatore da utilizzare con l'accensione automatica
+  - [Estate Indice di thom:](https://indomus.it/progetti/definire-un-indicatore-di-benessere-estivo-sulla-domotica-home-assistant/) Il condizionatore si accenderà o spegnerà se l'indice di thom rilevato è maggiore a quello impostato
+  - Estate Gradi Celsius: Il condizionatore si accenderà o spegnerà se la temperatura e l'umidità rilevata è maggiore a quella impostata
+  - Inverno: Il condizionatore si accenderà o spegnerà se la temperatura rilevata è inferiore a quella impostata
+  - Umidità: Il condizionatore si accenderà o spegnerà se l'umidità rilevata è maggiore a quella impostata
+- **Temperatura interna rilevata:** in base alla modalità selezionata è possibile impostare una temperatura/umidità/thom rilevata per gestire l'accensione o lo spegnimento del condizionatore in modalita automatica
+- **Velocità ventilazione:** è possibile impostare la velocità di ventilazione del condizionatore da utilizzare con l'accensione automatica
 - **Modalità hvca:** è possibile impostare la modalità hvca (dry,cool,auto...) del condizionatore da utilizzare con l'accensione automatica
 - **Temperatura condizionatore:** e possibile impostare la temperatura del condizionatore da utilizzare con l'accensione automatica
-- **Fascia oraria:** è possibile scegliere una fascia oraria per l'attivazione e per lo spegnimento automatico
-- **Presenza in casa:** le automazioni funzioneranno solo se lo stato del gruppo o della singola entità person si trova nello stato home. Se si passa allo stato  not_home il condizionatore verrà spento.
+- **Fascia oraria:** è possibile scegliere una fascia oraria per l'accensioni o lo spegnimento automatico
+- **Presenza in casa:** le automazioni funzioneranno solo se lo stato del gruppo o della singola entità person si trovano nello stato home. Se si passa allo stato  not_home il condizionatore verrà spento.
 ```
 # Esempio di un gruppo famiglia
 group:
@@ -81,13 +81,13 @@ group:
       - person.marco
       - person.serena
 ```
-- **Notifiche:** si può decidere se abilitare o disabilitare le notifiche. Di default nel pkg è impostato per riceverle su tutti i device con app companion installata. Nel caso si volessero utilizzare device diversi o media_player occorre modificarle.
+- **Notifiche:** si può decidere se abilitare o disabilitare le notifiche. Il pkg è impostato per riceverle su tutti i device con app companion installata. Nel caso si volessero utilizzare device diversi o media_player occorre modificarlo.
 - **Stato Finestre:** viene eseguito un controllo sullo stato finestre:
-    - Se il condizionatore è acceso e la finestra viene aperta si riceve un avviso di chiudere la finestra, se questo non avviene entro 30 secondi il condizionatore verrà spento.
+    - Se il condizionatore è acceso e la finestra verrà aperta riceverai una notifica per chiudere la stessa, se questo non avverrà entro 30 secondi il condizionatore verrà spento.
     - Se il condiziontore è spento e viene acceso manualmente con la finestra aperta si riceverà una notifica di avviso
     - Se l'accensione automatica è abilitata e ci sono i requisiti per accendere il condizionatore ma la finestra è aperta si riceverà una notifica
 - **Temperatura esterna:** Viene eseguita in due modalità
-   - Rispettando una sua fascia oraria: è possibile impostare una differenza di temperatura rilevata tra interna ed esterne che consiglia di aprire o chiudere la finestra se il controllo finestra è attivo ne verifica anche lo stato (es. quando rileva la temperatura esterna maggiore di 5° rispetto a quella interna)
+   - Rispettando una sua fascia oraria: è possibile impostare una differenza di temperatura rilevata tra interna ed esterna che consiglia di aprire o chiudere la finestra se il controllo finestra è attivo ne verifica anche lo stato (es. quando rileva la temperatura esterna maggiore di 5° rispetto a quella interna)
    - Legata allo stato del condizionatore:
       - Nel momento in cui il condizionatore si deve accendere in automatico ma la temperatura esterna è maggiore/minore (in base alla modalità impostata) di quella target, non avviene l'accensione del condizionatore ma si riceverà un notifica per aprire la finestra.
       - Se il condizionatore è acceso ma la temperatura esterna è maggiore/minore (in base alla modalità impostata) di quella target, si riceverà una notifica per aprire o chiudere la finestra e spegnere il condizionatore.
@@ -96,19 +96,19 @@ group:
   - se il condizionatore è acceso ed il serbatoio è pieno da 5 minuti il condizionatore si spegnerà con notifica
   - se il serbatoio è pieno e verrà acceso il condizionatore, riceverai una notifica per svuotarlo
   - se accendi il condizionatore ed il serbatoio è pieno ma non verrà svuotato entro 5 minuti si spegnerà con notifica.
-- **Statistiche utilizzo:** Utilizzando un dispositivo per rilevare la potenza assorbita, nel mio caso shelly-em puoi vedere visualizzare, il tempo di accensione, il costo ed il consumo del condizionatore senza utilizzo del recorder ed avendo la possibilità resettare i dati in qualsiasi momento.
+- **Statistiche utilizzo:** Utilizzando un dispositivo per rilevare la potenza assorbita, nel mio caso shelly-em puoi vedere visualizzato, il tempo di accensione, il costo ed il consumo del condizionatore senza utilizzo del recorder ed avere la possibilità resettare i dati in qualsiasi momento.
 ### Funzioni card pkg:
  <img src="https://user-images.githubusercontent.com/62516592/230679628-4aa84cd4-3cbd-45fe-87e7-e33b6362e0dd.jpg" width="200" >
  
-  - **Display standard:** sul display è possibile visualizzare lo stato del condizionatore (spento o il tempo di accesione), la temperatura impostata, la modalità hvca impostata, la velocità di ventilazione impostata, la temperatura ed umidità interna e se attivo o disattivo l'accensione e lo spegnimento automatico.
+  - **Display standard:**  sul display è possibile visualizzare lo stato del condizionatore (spento o acceso), temperatura, modalità hvca, velocità di ventilazione impostata e la temperatura ed umidità interna e se attivo, l'accensione e lo spegnimento automatico.
  <img src="https://user-images.githubusercontent.com/62516592/230679944-f0c45d7c-95cd-42da-9c99-498a5de8c6fe.jpg" width="200">
  
   - **1:** con un tap il condizionatore si accende o si spegne
   - **2:** con un tap è possibile cambiare la ventilazione
   - **3:** con un tap è possibile cambiare la modalità hvca (dry, cool, auto...)
   - **4:** con un tap è possibile aumentare la temperatura impostata
-  - **5:** con un tap è possibile visualizzare a display le 4 pagine di impostazioni, con un hold tap è possibile forzare l'uscita dal menu
-  - **6:** con un tap è possibile visualizzare a display le statistiche
+  - **5:** con un tap è possibile visualizzare sul display le 4 pagine di impostazioni, con un hold tap è possibile forzare l'uscita dal menu
+  - **6:** con un tap è possibile visualizzare sul display le statistiche
   - **7:** con un tap è possibile diminuire la temperatura impostata
  <img src="https://user-images.githubusercontent.com/62516592/230681033-1e8d73eb-9df6-4b3a-8e85-5f1b748f2185.jpg" width="200">
  
@@ -122,7 +122,7 @@ group:
 ### Caricamento card e pkg
 - **Caricamento pkg:**
   - Caricare il contenuto della cartella packages appena scaricata nella cartella packages presente nella propria istanza
-  - Aprire ogni singolo file e sostituire le entità presenti negli anchor
+  - Aprire ogni singolo file e sostituire le entità presenti negli anchors
 ```
 # esempio
 homeassistant:
@@ -136,7 +136,7 @@ homeassistant:
 {% set climate = 'climate.condizionatore_salone' %}
 ```
   - Se si vuole utilizzare il pkg per un secondo condizionatore occorre sostistuire OVUNQUE la parola ac_salone con una nuova a piacimento
-  - Di default le notifiche sono impostate per essere ricevute su tutti i device con app companion installata, se si voglioni riceve notifiche diverse es.media player occurre personalizzare i file  
+  - Di default le notifiche sono impostate per essere ricevute su tutti i device con app companion installata, se si voglioni riceve notifiche diverse es.media player occorre personalizzare i file  
 ```
 # servizio utilizzato di default
 - service: notify.notify
