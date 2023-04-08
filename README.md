@@ -115,13 +115,29 @@ group:
   - **Display impostazioni**: ogni pagina è composta da 5 sezioni, molte delle quali da due righe, per cambiare le impostazioni basta eseguire un tap per modificare i valori che si trovano sulla prima riga mentre un hold tap per selezionare la seconda riga dove presente
 ### Caricamento card e pkg
 - **Caricamento pkg:**
-  - caricare l'intera cartella **xxxxxxx** nella cartella packages
+  - Caricare il contenuto della cartella packages appena scaricata nella cartella packages presente nella propria istanza
   - Aprire ogni singolo file e sostituire le entità presenti negli anchor
-  - Modificare gli array del con le proprie entità nei file **xxxx**
+```
+# esempio
+homeassistant:
+  customize:
+    package.node_anchors:
+        Entità clima:                               &climate        climate.condizionatore_salone
+```
+  - Modificare gli array evidenziati con le proprie entità
+```
+# esempio
+{% set climate = 'climate.condizionatore_salone' %}
+```
   - Se si vuole utilizzare il pkg per un secondo condizionatore occorre sostistuire OVUNQUE la parola ac_salone con una nuova a piacimento
-  - **aggiungere** notifiche **TERMINARE**
-  - **aggiungere** costo euro
-  
+  - Di default le notifiche sono impostate per essere ricevute su tutti i device con app companion installata, se si voglioni riceve notifiche diverse es.media player occurre personalizzare i file  
+```
+# servizio utilizzato di default
+- service: notify.notify
+  data:
+    title: title
+    message: message
+```            
 - **Caricamento card:**
   - Per eseguire la card basta copiare il file all'interno della propria dashboard yaml
   - cambiare la variabile climate con la propria entità
