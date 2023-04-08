@@ -1,4 +1,4 @@
-# Homeassistant-climate
+# Homeassistant climate
 
 Questo progetto è utilizzabile in tre modalità diverse.
 - [Card base per telecomando](#card-base-per-telecomando)
