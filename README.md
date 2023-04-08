@@ -1,6 +1,12 @@
 # Homeassistant climate
 
-Questo progetto è utilizzabile in tre modalità diverse.
+Questo progetto è utilizzabile in tre modalità diverse. 
+- Card base per telecomando
+  > E' una card che permette di simulare il telecomando per un'entità climate creata con smart ir
+- Card avanzata con pkg per gestione automazioni e statistiche
+  > E' pacchetto completo per gestire il condizionatore integrato con smart ir in modo automatico con una card più completa rispetto alla precedente
+- Blueperint per gestione automazione
+  > E' un progetto di facile configurazione adatto per tutte le entità climate per la gestione automatica del condizionatore
 - [Card base per telecomando](#card-base-per-telecomando)
   - [Requisiti](#requisiti-card-base)
   - [Funzioni card](#funzioni-card)
