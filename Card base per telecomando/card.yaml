@@ -1,6 +1,8 @@
 type: custom:button-card
 variables:
   climate: climate.condizionatore_salone
+  translate_on: 'Acceso'
+  translate_off: 'Spento'
 triggers_update: all
 styles:
   card:
@@ -266,8 +268,8 @@ custom_fields:
                 - color: rgba(49, 46, 42, 1)
             name: |
               [[[
-                if (states[variables.climate].state == 'off') return 'Spento';
-                else return 'Acceso';
+                if (states[variables.climate].state == 'off') return variables.translate_off ;
+                else return variables.translate_on ;
               ]]]
         fan:
           card:
