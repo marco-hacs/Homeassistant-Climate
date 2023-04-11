@@ -34,3 +34,5 @@ automation:
         - service: input_boolean.turn_off
           target:
             entity_id: input_boolean.statistic_ac_salone
+ 
+ adesso si che esprimi il tuo potenziale ahahhahahhaa
