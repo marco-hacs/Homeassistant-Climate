@@ -43,12 +43,14 @@ The card is made with svg image and custom button-card
   - **7:** with a tap you can decrease the set temperature
  
 ### Basic card loading:
-To run the card, simply copy the file inside a new manual card and replace the climate variable with your own entity
+To run the card simply copy the file inside a new manual card and replace the climate variable with your own entity and set the state in your own language (translate_on,translate_off)
 
 ``` 
 type: custom:button-card
 variables:
   climate: climate.condizionatore_salone
+  translate_on: 'Acceso'
+  translate_off: 'Spento'
 ```
 
 # Advanced card with pkg for automation and statistics management
