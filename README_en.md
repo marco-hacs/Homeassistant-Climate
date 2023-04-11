@@ -12,7 +12,7 @@ This project can be used in three different modes.
   - [Requirements](#basic-card-requirements)
   - [Functions card](#functions-card)
   - [Loading](#basic-card-loading)
-- [Card avanzata con pkg per gestione automazioni e statistiche](#card-avanzata-con-pkg-per-gestione-automazioni-e-statistiche)
+- [Advanced card with pkg for automation and statistics management](#advanced-card-with-pkg-for-automation-and-statistics-management)
   - [Requirements ](#requirements-pkg)
   - [Functions pkg](#functions-pkg)
   - [Functions card ](#functions-card-pkg)
@@ -51,7 +51,7 @@ variables:
   climate: climate.condizionatore_salone
 ```
 
-# Card avanzata con pkg per gestione automazioni e statistiche
+# Advanced card with pkg for automation and statistics management
 https://user-images.githubusercontent.com/62516592/230683695-5766ce0c-f760-4e4b-99d1-73056ebbfd53.mp4
 ### Requirements pkg: 
 - [custom button card](https://github.com/custom-cards/button-card) con template abilitato
