@@ -1,4 +1,4 @@
-# Gestione button statistiche ed impostazioni della card
+# Gestione button statistiche ed impostazioni della card 
 input_boolean: 
   statistic_ac_salone: 
 
