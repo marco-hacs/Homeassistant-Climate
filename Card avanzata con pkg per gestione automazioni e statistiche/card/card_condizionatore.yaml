@@ -27,8 +27,8 @@
             - top: 385px
           power:
             - position: absolute
-            - left: 136px
-            - top: 385px
+            - left: 137px
+            - top: 387px
           setting:
             - position: absolute
             - left: 175px
