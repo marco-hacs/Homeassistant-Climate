@@ -48,6 +48,8 @@ styles:
       - left: 86px
       - top: 50px
 custom_fields:
+  #       TASTO IMPOSTAZIONI
+  #   AZIONE DA PERSONALIZZARE
   setting:
     card:
       type: custom:button-card
@@ -65,6 +67,8 @@ custom_fields:
       tap_action:
         action: more-info
         entity: '[[[ return variables.climate ]]]'
+  #       TASTO STATISTICHE
+  #   AZIONE DA PERSONALIZZARE
   statistic:
     card:
       type: custom:button-card
