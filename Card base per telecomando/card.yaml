@@ -49,6 +49,10 @@ styles:
       - position: absolute
       - left: 86px
       - top: 50px
+    name_climate:
+      - position: absolute
+      - left: '-11px'
+      - top: 315px
 custom_fields:
   #       TASTO IMPOSTAZIONI
   #   AZIONE DA PERSONALIZZARE
@@ -88,6 +92,27 @@ custom_fields:
       tap_action:
         action: more-info
         entity: '[[[ return variables.climate ]]]'
+  name_climate:
+    card:
+      type: custom:button-card
+      custom_fields:
+        test: |
+          [[[
+            let state = states[variables.climate].attributes.friendly_name
+            return `        
+            <style>
+              .curved-text {
+                font-size: 20px;                
+              }
+              .curved-path {
+                fill: none;
+              }
+            </style> <svg width="300" height="300" >
+              <path id="curve" d="M 90 200 q 94 68 200 0" class="curved-path"></path>
+              <text class="curved-text">
+                <textPath href="#curve">${state}</textPath>
+            `;
+          ]]]
   hvac:
     card:
       type: custom:button-card
