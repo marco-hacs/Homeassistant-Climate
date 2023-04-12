@@ -129,21 +129,14 @@
           card:
             type: custom:button-card
             custom_fields:
-              test: |
+              name_climate: |
                 [[[
                   let state = states[variables.climate].attributes.friendly_name
                   return `        
-                  <style>
-                    .curved-text {
-                      font-size: 20px;                
-                    }
-                    .curved-path {
-                      fill: none;
-                    }
-                  </style> <svg width="300" height="300" >
-                    <path id="curve" d="M 90 200 q 94 68 200 0" class="curved-path"></path>
-                    <text class="curved-text">
-                      <textPath href="#curve">${state}</textPath>
+                  <svg width="500" height="500">
+                      <path id="curve" fill="none" d="M 90 200 q 94 68 200 0" />
+                      <text x="100" y="25" text-anchor="middle" alignment-baseline="central"> 
+                      <textPath href="#curve">${state}</>
                   `;
                 ]]]
         ####################################################################
