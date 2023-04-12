@@ -43,14 +43,12 @@ La card è realizzata con immagine svg e custom button-card
   - **7:** con un tap è possibile diminuire la temperatura impostata
  
 ### Caricamento card base:
-Per eseguire la card basta copiare il file all'interno di una nuova card manuale e sostituire la variabile climate con la propria entità ed impostare lo stato nella prorpia lingua (translate_on,translate_off)
+Per eseguire la card basta copiare il file all'interno di una nuova card manuale e sostituire la variabile climate con la propria entità 
 
 ``` 
 type: custom:button-card
 variables:
   climate: climate.condizionatore_salone
-  translate_on: 'Acceso'
-  translate_off: 'Spento'
 ```
 
 # Card avanzata con pkg per gestione automazioni e statistiche
