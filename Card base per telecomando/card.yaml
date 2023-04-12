@@ -1,3 +1,5 @@
+
+
 type: custom:button-card
 variables:
   climate: climate.condizionatore_salone
