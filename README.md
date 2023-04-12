@@ -21,7 +21,7 @@ Questo progetto è utilizzabile in tre modalità diverse.
   - [Requisiti](#requisiti-blueprint)
   - [Funzioni blueprint](#funzioni-blueprint)
 
-## Card base per telecomando:
+## Card base per telecomando: 
  <img src="https://user-images.githubusercontent.com/62516592/230682774-197c62dc-205e-47e4-8195-d32e354635cc.jpg" width="200">
  
 ### Requisiti card base:
