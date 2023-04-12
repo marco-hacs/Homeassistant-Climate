@@ -317,7 +317,7 @@
                 card:
                   type: custom:button-card
                   template: info_display
-                  name: '[[[ return states[variables.climate].attributes.fan_mode]]]'
+                  name: '[[[ return states[variables.climate].attributes.fan_mode.toUpperCase()]]]'
 
               mode:
                 card:

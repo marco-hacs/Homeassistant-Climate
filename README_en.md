@@ -2,11 +2,11 @@
 
 This project can be used in three different modes. 
 - Remote control base card
-  > Allows you to simulate the remote control for a climate entity created with smart ir
+  > Allows you to simulate the remote control for a climate entity created with smart ir (valid for all languages)
 - Advanced card with pkg for managing automations and statistics
-  > Complete package to manage the integrated air conditioner with smart ir automatically with a more complete card than the previous one
+  > Complete package to manage the integrated air conditioner with smart ir automatically with a more complete card than the previous one (text in Italian)
 - Blueprint for automation management
-  > Easy configuration blueprint suitable for all climate entities for automatic air conditioner management
+  > Easy configuration blueprint suitable for all climate entities for automatic air conditioner management (English and Italian translations)
  ## Index
 - [Card base for remote control](#card-base-for-remote-control)
   - [Requirements](#basic-card-requirements)

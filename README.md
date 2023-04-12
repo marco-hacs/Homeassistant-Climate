@@ -2,11 +2,11 @@
 
 Questo progetto è utilizzabile in tre modalità diverse. 
 - Card base per telecomando
-  > Permette di simulare il telecomando per un'entità climate creata con smart ir
+  > Permette di simulare il telecomando per un'entità climate creata con smart ir (valido per tutte le lingue)
 - Card avanzata con pkg per gestione automazioni e statistiche
-  > Pacchetto completo per gestire il condizionatore integrato con smart ir in modo automatico con una card più completa rispetto alla precedente
+  > Pacchetto completo per gestire il condizionatore integrato con smart ir in modo automatico con una card più completa rispetto alla precedente (testo in italiano)
 - Blueprint per gestione automazione
-  > Progetto di facile configurazione adatto per tutte le entità climate per la gestione automatica del condizionatore
+  > Progetto di facile configurazione adatto per tutte le entità climate per la gestione automatica del condizionatore (traduzioni in Inglese ed Italiano)
  ## Indice
 - [Card base per telecomando](#card-base-per-telecomando)
   - [Requisiti](#requisiti-card-base)
